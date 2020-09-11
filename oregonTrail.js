@@ -1,5 +1,3 @@
-var prompt = require('prompt-sync')();
-
 /*  MINNESOTA EDUCATIONAL COMPUTING CONSORTIUM STAFF */
 /*  PROGRAMMING REVISIONS BY DON RAWITSCH - 1975     */
 /*  CURRENT VERSION - 3/27/75                        */
@@ -860,33 +858,10 @@ play.PROMPT_TYPE = {
   NONE: 'NONE',
 };
 
-let game = play();
-let input;
-while (true) {
-  const { done, value: output } = game.next(input);
-  if (done) {
-    break;
-  }
-
-  switch (output.type) {
-    case play.PROMPT_TYPE.CHOICE: {
-      console.log(output.text);
-      input = prompt();
-      break;
-    }
-    case play.PROMPT_TYPE.NUMERIC: {
-      input = prompt(output.text);
-      break;
-    }
-    case play.PROMPT_TYPE.STRING: {
-      input = prompt(output.text);
-      break;
-    }
-    case play.PROMPT_TYPE.NONE:
-    default: {
-      console.log(output.text);
-      input = undefined;
-      break;
-    }
-  }
+if (typeof module === 'undefined') {
+  module = {};
 }
+
+module.exports = {
+  play
+};

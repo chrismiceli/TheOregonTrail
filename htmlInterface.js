@@ -57,8 +57,7 @@ function createInput(text, type) {
 }
 
 const game = play();
-let input;
-function getInputs() {
+function getInputs(input) {
   const { done, value: output } = game.next(input);
   if (!done) {
     let promise;

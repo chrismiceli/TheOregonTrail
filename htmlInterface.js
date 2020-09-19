@@ -9,7 +9,7 @@ function createInfo(text) {
 function createChoice(text, choices) {
   const appElement = document.getElementById('app');
   createInfo(text);
-  const promise = new Promise(resolve => {
+  const promise = new Promise((resolve) => {
     const choiceButtons = [];
     choices.forEach((choice, index) => {
       const choiceButton = document.createElement('button');
@@ -39,7 +39,7 @@ function createChoice(text, choices) {
 function createInput(text, type) {
   const appElement = document.getElementById('app');
   createInfo(text);
-  const promise = new Promise(resolve => {
+  const promise = new Promise((resolve) => {
     const formElement = document.createElement('form');
     const numberInput = document.createElement('input');
     if (type) {
@@ -47,7 +47,7 @@ function createInput(text, type) {
     }
     const enterButton = document.createElement('button');
     enterButton.textContent = 'ENTER';
-    let eventListener = event => {
+    let eventListener = (event) => {
       enterButton.removeEventListener('click', eventListener);
       formElement.removeEventListener('submit', eventListener);
       const value = numberInput.value;

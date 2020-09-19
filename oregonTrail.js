@@ -36,10 +36,10 @@ function* play() {
     yield createInfo('FORMALITIES WE MUST GO THROUGH');
     createChoice('WOULD YOU LIKE A MINISTER?', ['YES', 'NO']);
     createChoice('WOULD YOU LIKE A FANCY FUNERAL?', ['YES', 'NO']);
-    const C$ = yield createChoice('WOULD YOU LIKE US TO INFORM YOUR NEXT OF KIN?', [
-      'YES',
-      'NO',
-    ]);
+    const C$ = yield createChoice(
+      'WOULD YOU LIKE US TO INFORM YOUR NEXT OF KIN?',
+      ['YES', 'NO']
+    );
     if (C$ !== 'YES') {
       yield createInfo('YOUR AUNT NELLIE IN ST. LOUIS IS ANXIOUS TO HEAR');
     }
@@ -368,7 +368,9 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
             yield createInfo('SORRY---NO LUCK TODAY');
           } else {
             F = F + 48 - 2 * B1;
-            yield createInfo('NICE SHOT--RIGHT THROUGH THE NECK--FEAST TONIGHT!!');
+            yield createInfo(
+              'NICE SHOT--RIGHT THROUGH THE NECK--FEAST TONIGHT!!'
+            );
             B = B - 10 - 3 * B1;
           }
         } else {
@@ -391,8 +393,8 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
               ),
               10
             );
-            if (E <= 3 && E >= 1) {
-              break;
+            if (E > 3 || E < 1) {
+              continue;
             }
 
             F = F - 8 - 5 * E;
@@ -441,342 +443,338 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
                 break;
               }
             }
-            if ((S5 = 1)) {
+            if (S5 !== 1) {
               if (T1 <= 1) {
-                M = M + 15;
-                A = A - 10;
-                // GOTO 2395
+                M = M + 20;
+                M1 = M1 - 15;
+                B = B - 150;
+                A = A - 40;
               } else {
                 if (T1 <= 2) {
-                  M = M - 5;
-                  B = B - 100;
-                  // goto 2395
+                  yield* shoot();
+                  B = B - B1 * 40 - 80;
+                  if (B1 <= 1) {
+                    yield createInfo('NICE SHOOTING---YOU DROVE THEM OFF');
+                  } else {
+                    if (B1 > 4) {
+                      yield createInfo('LOUSY SHOT---YOU GOT KNIFED');
+                      K8 = 1;
+                      yield createInfo("YOU HAVE TO SEE OL' DOC BLANCHARD");
+                    } else {
+                      yield createInfo('KINDA SLOW WITH YOUR COLT .45');
+                    }
+                  }
                 } else {
                   if (T1 <= 3) {
-                    // 2395
+                    if (Math.random() <= .8) {
+                      B = B - 150;
+                      M1 = M1 - 15;
+                      // goto 2395
+                    } else {
+                      yield createInfo('THEY DID NOT ATTACK');
+                      // goto 2500
+                    }
                   } else {
-                    M = M - 20;
-                    // goto 2395
+                    yield* shoot();
+                    B=B-B1*30-80;
+                    M = M - 25;
+                    // goto 2235
                   }
                 }
               }
-            }
-            if (T1 <= 1) {
-              M = M + 20;
-              M1 = M1 - 15;
-              B = B - 150;
-              A = A - 40;
-              // goto 2395
             } else {
-              if (T1 <= 2) {
-                yield* shoot();
-                if (B1 <= 1) {
-                  yield createInfo('NICE SHOOTING---YOU DROVE THEM OFF');
-                  //2395
-                } else {
-                  if (B1 > 4) {
-                    yield createInfo('LOUSY SHOT---YOU GOT KNIFED');
-                    K8 = 1;
-                    yield createInfo("YOU HAVE TO SEE OL' DOC BLANCHARD");
-                    // 2395
-                  } else {
-                    yield createInfo('KINDA SLOW WITH YOUR COLT .45');
-                    // 2395
-                  }
-                }
-              } else {
-                if (T1 <= 3) {
-                  if (Math.random() <= 0.8) {
-                    B = B - 150;
-                    M1 = M1 - 15;
-                    // goto 2395
-                  } else {
-                    yield createInfo('THEY DID NOT ATTACK');
-                    // goto 2500
-                  }
-                } else {
-                  yield* shoot();
-                  B = B - B1 * 30 - 80;
-                  M = M - 25;
-                  // goto 2350
-                }
-              }
-            }
-          } else {
-            // ***SELECTION OF EVENTS***
-            const DATA = [
-              6,
-              11,
-              13,
-              15,
-              17,
-              22,
-              32,
-              35,
-              37,
-              42,
-              44,
-              54,
-              64,
-              69,
-              95,
-            ];
-            let D1 = 0;
-            let DATA_INDEX = 0; // RESTORE
-            R1 = 100 * Math.random();
-            while (true) {
-              D1 = D1 + 1;
-              if (D1 !== 16) {
-                const D = DATA[DATA_INDEX - 1];
-                DATA_INDEX = DATA_INDEX + 1;
-                if (R1 <= D) {
-                  break;
-                }
-              } else {
-                break;
+              if (T1 <= 1) {
+              M = M + 15;
+              A = A - 10;
+              } else if (T1 <= 2) {
+                M = M - 5;
+                B = B - 100;
+              } else if (T1 > 3) {
+                M = M - 20;
               }
             }
 
-            switch (D1) {
-              case 1: {
-                yield createInfo(
-                  'WAGON BREAKS DOWN--LOSE TIME AND SUPPLIES FIXING IT'
-                );
-                M = M - 15 - 5 * Math.random();
-                M1 = M1 - 8;
-                break;
-              }
-              case 2: {
-                yield createInfo(
-                  'OX INJURES LEG---SLOWS YOU DOWN REST OF TRIP'
-                );
-                M = M - 25;
-                A = A - 20;
-                break;
-              }
-              case 3: {
-                yield createInfo('BAD LUCK---YOUR DAUGHTER BROKE HER ARM');
-                yield createInfo(
-                  'YOU HAD TO STOP AND USE SUPPLIES TO MAKE A SLING'
-                );
-                M = M - 5 - 4 * Math.random();
-                M1 = M1 - 2 - 3 * Math.random();
-                break;
-              }
-              case 4: {
-                yield createInfo('OX WANDERS OFF---SPEND TIME LOOKING FOR IT');
-                M = M - 17;
-                break;
-              }
-              case 5: {
-                yield createInfo(
-                  'YOUR SON GETS LOST---SPEND HALF THE DAY LOOKING FOR HIM'
-                );
-                M = M - 10;
-                break;
-              }
-              case 6: {
-                yield createInfo(
-                  'UNSAFE WATER--LOSE TIME LOOKING FOR CLEAN SPRING'
-                );
-                M = M - 10 * Math.random() - 2;
-                break;
-              }
-              case 7: {
-                if (M <= 950) {
-                  yield createInfo('HEAVY RAINS---TIME AND SUPPLIES LOST');
-                  F = F - 10;
-                  B = B - 500;
-                  M1 = M1 - 15;
-                  M = M - 10 * Math.random() - 5;
-                } else {
-                  // todo 2935
-                }
-                break;
-              }
-              case 8: {
-                yield createInfo('BANDITS ATTACK');
-                // todo 4500 goto sub
-                break;
-              }
-              case 9: {
-                yield createInfo(
-                  'THERE WAS A FIRE IN YOUR WAGON--FOOD AND SUPPLIES DAMAGED'
-                );
-                F = F - 40;
-                B = B - 400;
-                M1 = M1 - Math.random() * 8 - 3;
-                M = M - 15;
-                break;
-              }
-              case 10: {
-                yield createInfo('LOSE YOUR WAY IN HEAVY FOG---TIME IS LOST');
-                M = M - 10 - 5 * Math.random();
-                break;
-              }
-              case 11: {
-                yield createInfo(
-                  'YOU KILLED A POISONOUS SNAKE AFTER IT BIT YOU'
-                );
-                B = B - 10;
-                M1 = M1 - 5;
-                if (M1 < 0) {
-                  yield createInfo(
-                    'YOU DIE OF SNAKEBITE SINCE YOU HAVE NO MEDICINE'
-                  );
-                  yield* die();
-                  return;
-                }
-                break;
-              }
-              case 12: {
-                yield createInfo(
-                  'WAGON GETS SWAMPED FORDING RIVER--LOSE FOOD AND CLOTHES'
-                );
-                F = F - 30;
-                C = C - 20;
-                M = M - 20 - 20 * Math.random();
-                break;
-              }
-              case 13: {
-                yield createInfo('WILD ANIMALS ATTACK!');
-                // todo
-                break;
-              }
-              case 14: {
-                yield createInfo('HAIL STORM---SUPPLIES DAMAGED');
-                M = M - 5 - Math.random() * 10;
-                B = B - 200;
-                M1 = M1 - 4 - Math.random() * 3;
-                break;
-              }
-              case 15: {
-                // todo 2990
-              }
-              default:
-              case 16: {
-                yield createInfo(
-                  'HELPFUL INDIANS SHOW YOU WHERE TO FIND MORE FOOD'
-                );
-                F = F + 14;
-                break;
+            // 2395 here please?
+            if (S5 !== 0) {
+              yield createInfo('RIDERS WERE FRIENDLY, BUT CHECK FOR POSSIBLE LOSSES');
+            } else {
+              yield createInfo('RIDERS WERE HOSTILE--CHECK FOR LOSSES');
+              if (B < 0) {
+                yield createInfo('YOU RAN OUT OF BULLETS AND GOT MASSACRED BY THE RIDERS');
+                yield *die();
+                return;
               }
             }
+          }
+          // ***SELECTION OF EVENTS***
+          const DATA = [
+            6,
+            11,
+            13,
+            15,
+            17,
+            22,
+            32,
+            35,
+            37,
+            42,
+            44,
+            54,
+            64,
+            69,
+            95,
+          ];
+          let D1 = 0;
+          let DATA_INDEX = 0; // RESTORE
+          R1 = 100 * Math.random();
+          while (true) {
+            D1 = D1 + 1;
+            if (D1 !== 16) {
+              const D = DATA[DATA_INDEX - 1];
+              DATA_INDEX = DATA_INDEX + 1;
+              if (R1 <= D) {
+                break;
+              }
+            } else {
+              break;
+            }
+          }
 
-            // ***MOUNTAINS***
-            if (M > 950) {
-              if (
-                Math.random() * 10 <=
-                9 -
-                  (Math.pow(M / 100 - 15, 2) + 72) /
-                    (Math.pow(M / 100 - 15, 2) + 12)
-              ) {
-                yield createInfo('RUGGED MOUNTAINS');
-                if (Math.random() <= 0.1) {
-                  yield createInfo(
-                    'YOU GOT LOST---LOSE VALUABLE TIME TRYING TO FIND TRAIL!'
-                  );
-                  M = M - 60;
-                  // goto 3175
+          switch (D1) {
+            case 1: {
+              yield createInfo(
+                'WAGON BREAKS DOWN--LOSE TIME AND SUPPLIES FIXING IT'
+              );
+              M = M - 15 - 5 * Math.random();
+              M1 = M1 - 8;
+              break;
+            }
+            case 2: {
+              yield createInfo('OX INJURES LEG---SLOWS YOU DOWN REST OF TRIP');
+              M = M - 25;
+              A = A - 20;
+              break;
+            }
+            case 3: {
+              yield createInfo('BAD LUCK---YOUR DAUGHTER BROKE HER ARM');
+              yield createInfo(
+                'YOU HAD TO STOP AND USE SUPPLIES TO MAKE A SLING'
+              );
+              M = M - 5 - 4 * Math.random();
+              M1 = M1 - 2 - 3 * Math.random();
+              break;
+            }
+            case 4: {
+              yield createInfo('OX WANDERS OFF---SPEND TIME LOOKING FOR IT');
+              M = M - 17;
+              break;
+            }
+            case 5: {
+              yield createInfo(
+                'YOUR SON GETS LOST---SPEND HALF THE DAY LOOKING FOR HIM'
+              );
+              M = M - 10;
+              break;
+            }
+            case 6: {
+              yield createInfo(
+                'UNSAFE WATER--LOSE TIME LOOKING FOR CLEAN SPRING'
+              );
+              M = M - 10 * Math.random() - 2;
+              break;
+            }
+            case 7: {
+              if (M <= 950) {
+                yield createInfo('HEAVY RAINS---TIME AND SUPPLIES LOST');
+                F = F - 10;
+                B = B - 500;
+                M1 = M1 - 15;
+                M = M - 10 * Math.random() - 5;
+              } else {
+                // todo 2935
+              }
+              break;
+            }
+            case 8: {
+              yield createInfo('BANDITS ATTACK');
+              // todo 4500 goto sub
+              break;
+            }
+            case 9: {
+              yield createInfo(
+                'THERE WAS A FIRE IN YOUR WAGON--FOOD AND SUPPLIES DAMAGED'
+              );
+              F = F - 40;
+              B = B - 400;
+              M1 = M1 - Math.random() * 8 - 3;
+              M = M - 15;
+              break;
+            }
+            case 10: {
+              yield createInfo('LOSE YOUR WAY IN HEAVY FOG---TIME IS LOST');
+              M = M - 10 - 5 * Math.random();
+              break;
+            }
+            case 11: {
+              yield createInfo('YOU KILLED A POISONOUS SNAKE AFTER IT BIT YOU');
+              B = B - 10;
+              M1 = M1 - 5;
+              if (M1 < 0) {
+                yield createInfo(
+                  'YOU DIE OF SNAKEBITE SINCE YOU HAVE NO MEDICINE'
+                );
+                yield* die();
+                return;
+              }
+              break;
+            }
+            case 12: {
+              yield createInfo(
+                'WAGON GETS SWAMPED FORDING RIVER--LOSE FOOD AND CLOTHES'
+              );
+              F = F - 30;
+              C = C - 20;
+              M = M - 20 - 20 * Math.random();
+              break;
+            }
+            case 13: {
+              yield createInfo('WILD ANIMALS ATTACK!');
+              // todo
+              break;
+            }
+            case 14: {
+              yield createInfo('HAIL STORM---SUPPLIES DAMAGED');
+              M = M - 5 - Math.random() * 10;
+              B = B - 200;
+              M1 = M1 - 4 - Math.random() * 3;
+              break;
+            }
+            case 15: {
+              // todo 2990
+            }
+            default:
+            case 16: {
+              yield createInfo(
+                'HELPFUL INDIANS SHOW YOU WHERE TO FIND MORE FOOD'
+              );
+              F = F + 14;
+              break;
+            }
+          }
+
+          // ***MOUNTAINS***
+          if (M > 950) {
+            if (
+              Math.random() * 10 <=
+              9 -
+                (Math.pow(M / 100 - 15, 2) + 72) /
+                  (Math.pow(M / 100 - 15, 2) + 12)
+            ) {
+              yield createInfo('RUGGED MOUNTAINS');
+              if (Math.random() <= 0.1) {
+                yield createInfo(
+                  'YOU GOT LOST---LOSE VALUABLE TIME TRYING TO FIND TRAIL!'
+                );
+                M = M - 60;
+                // goto 3175
+              } else {
+                if (Math.random() <= 0.11) {
+                  yield createInfo('WAGON DAMAGED!---LOSE TIME AND SUPPLIES');
+                  M1 = M1 - 5;
+                  B = B - 200;
+                  M = M - 20 - 30 * Math.random();
+                  //GOTO 3175
                 } else {
-                  if (Math.random() <= 0.11) {
-                    yield createInfo('WAGON DAMAGED!---LOSE TIME AND SUPPLIES');
-                    M1 = M1 - 5;
-                    B = B - 200;
-                    M = M - 20 - 30 * Math.random();
-                    //GOTO 3175
-                  } else {
-                    yield createInfo('THE GOING GETS SLOW');
-                    M = M - 45 - Math.random() / 0.02;
-                    if (F1 !== 1) {
-                      F1 = 1;
-                      if (Math.random() >= 0.8) {
-                        yield createInfo(
-                          'YOU MADE IT SAFELY THROUGH SOUTH PASS--NO SNOW'
-                        );
-                        if (M >= 1700) {
-                          if (F2 !== 1) {
-                            F2 = 1;
-                            if (Math.random() >= 0.7) {
-                              if (M <= 950) {
-                                M9 = 1;
-                                // goto 700
-                              } else {
-                                // 700
-                              }
+                  yield createInfo('THE GOING GETS SLOW');
+                  M = M - 45 - Math.random() / 0.02;
+                  if (F1 !== 1) {
+                    F1 = 1;
+                    if (Math.random() >= 0.8) {
+                      yield createInfo(
+                        'YOU MADE IT SAFELY THROUGH SOUTH PASS--NO SNOW'
+                      );
+                      if (M >= 1700) {
+                        if (F2 !== 1) {
+                          F2 = 1;
+                          if (Math.random() >= 0.7) {
+                            if (M <= 950) {
+                              M9 = 1;
+                              // goto 700
                             } else {
-                              yield createInfo(
-                                'BLIZZARD IN MOUNTAIN PASS--TIME AND SUPPLIES LOST'
-                              );
-                              L1 = 1;
-                              F = F - 25;
-                              M1 = M1 - 10;
-                              B = B - 300;
-                              M = M - 30 - 40 * Math.random();
-                              if (C >= 18 + 2 * Math.random()) {
-                                // goto 3215
-                              } else {
-                                // goto 4700
-                              }
+                              // 700
                             }
                           } else {
-                            // 3215
+                            yield createInfo(
+                              'BLIZZARD IN MOUNTAIN PASS--TIME AND SUPPLIES LOST'
+                            );
+                            L1 = 1;
+                            F = F - 25;
+                            M1 = M1 - 10;
+                            B = B - 300;
+                            M = M - 30 - 40 * Math.random();
+                            if (C >= 18 + 2 * Math.random()) {
+                              // goto 3215
+                            } else {
+                              // goto 4700
+                            }
                           }
                         } else {
                           // 3215
                         }
                       } else {
-                        //3300
+                        // 3215
                       }
                     } else {
-                      //3195?
+                      //3300
                     }
+                  } else {
+                    //3195?
                   }
                 }
-              } else {
-                // goto 3175
               }
+            } else {
+              // goto 3175
             }
-            // ***SETTING DATE***
-            D3 = D3 + 1;
-            let date = 'MONDAY ';
-            if (D3 === 1) {
-              date = `${date}APRIL 12 `;
-            } else if (D3 === 2) {
-              date = `${date}APRIL 26 `;
-            } else if (D3 === 3) {
-              date = `${date}MAY 10 `;
-            } else if (D3 === 4) {
-              date = `${date}MAY 24 `;
-            } else if (D3 === 5) {
-              date = `${date}JUNE 7 `;
-            } else if (D3 === 6) {
-              date = `${date}JUNE 21 `;
-            } else if (D3 === 7) {
-              date = `${date}JULY 5 `;
-            } else if (D3 === 8) {
-              date = `${date}JULY 19 `;
-            } else if (D3 === 9) {
-              date = `${date}AUGUST 2 `;
-            } else if (D3 === 10) {
-              date = `${date}AUGUST 16 `;
-            } else if (D3 === 11) {
-              date = `${date}AUGUST 31 `;
-            } else if (D3 === 12) {
-              date = `${date}SEPTEMBER 13 `;
-            } else if (D3 === 13) {
-              date = `${date}SEPTEMBER 27 `;
-            } else if (D3 === 14) {
-              date = `${date}OCTOBER 11 `;
-            } else if (D3 === 15) {
-              date = `${date}OCTOBER 25 `;
-            } else if (D3 === 16) {
-              date = `${date}NOVEMBER 8 `;
-            } else if (D3 === 17) {
-              date = `${date}NOVEMBER 22 `;
-            }
-            yield createInfo(`${date}1847`);
           }
+          // ***SETTING DATE***
+          D3 = D3 + 1;
+          let date = 'MONDAY ';
+          if (D3 === 1) {
+            date = `${date}APRIL 12 `;
+          } else if (D3 === 2) {
+            date = `${date}APRIL 26 `;
+          } else if (D3 === 3) {
+            date = `${date}MAY 10 `;
+          } else if (D3 === 4) {
+            date = `${date}MAY 24 `;
+          } else if (D3 === 5) {
+            date = `${date}JUNE 7 `;
+          } else if (D3 === 6) {
+            date = `${date}JUNE 21 `;
+          } else if (D3 === 7) {
+            date = `${date}JULY 5 `;
+          } else if (D3 === 8) {
+            date = `${date}JULY 19 `;
+          } else if (D3 === 9) {
+            date = `${date}AUGUST 2 `;
+          } else if (D3 === 10) {
+            date = `${date}AUGUST 16 `;
+          } else if (D3 === 11) {
+            date = `${date}AUGUST 31 `;
+          } else if (D3 === 12) {
+            date = `${date}SEPTEMBER 13 `;
+          } else if (D3 === 13) {
+            date = `${date}SEPTEMBER 27 `;
+          } else if (D3 === 14) {
+            date = `${date}OCTOBER 11 `;
+          } else if (D3 === 15) {
+            date = `${date}OCTOBER 25 `;
+          } else if (D3 === 16) {
+            date = `${date}NOVEMBER 8 `;
+          } else if (D3 === 17) {
+            date = `${date}NOVEMBER 22 `;
+          }
+          yield createInfo(`${date}1847`);
         }
       } else {
         // ***DYING***
@@ -870,5 +868,5 @@ if (typeof module === 'undefined') {
 }
 
 module.exports = {
-  play
+  play,
 };

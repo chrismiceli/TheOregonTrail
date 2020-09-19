@@ -1,5 +1,5 @@
 debugger;
-const {play} = require('./oregonTrail');
+const { play } = require('./oregonTrail');
 const prompt = require('prompt-sync')();
 
 let game = play();

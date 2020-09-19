@@ -36,14 +36,13 @@ function* play() {
     yield createInfo('FORMALITIES WE MUST GO THROUGH');
     createChoice('WOULD YOU LIKE A MINISTER?', ['YES', 'NO']);
     createChoice('WOULD YOU LIKE A FANCY FUNERAL?', ['YES', 'NO']);
-    const C = createChoice('WOULD YOU LIKE US TO INFORM YOUR NEXT OF KIN?', [
+    const C$ = yield createChoice('WOULD YOU LIKE US TO INFORM YOUR NEXT OF KIN?', [
       'YES',
       'NO',
     ]);
-    if (C !== 'YES') {
+    if (C$ !== 'YES') {
       yield createInfo('YOUR AUNT NELLIE IN ST. LOUIS IS ANXIOUS TO HEAR');
     }
-    yield createInfo('YOUR AUNT NELLIE IN ST. LOUIS IS ANXIOUS TO HEAR');
     yield createInfo('WE THANK YOU FOR THIS INFORMATION AND WE ARE SORRY YOU');
     yield createInfo("DIDN'T MAKE IT TO THE GREAT TERRITORY OF OREGON");
     yield createInfo('BETTER LUCK NEXT TIME');
@@ -52,8 +51,8 @@ function* play() {
     return;
   }
 
-  let choice = yield createChoice('DO YOU NEED INSTRUCTIONS', ['YES', 'NO']);
-  if (choice !== 'NO') {
+  let C$ = yield createChoice('DO YOU NEED INSTRUCTIONS', ['YES', 'NO']);
+  if (C$ !== 'NO') {
     // ***INSTRUCTIONS***
     yield createInfo(
       `THIS PROGRAM SIMULATES A TRIP OVER THE OREGON TRAIL FROM
@@ -120,6 +119,7 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
       yield createInfo(`${info}INJURIES`);
     }
     yield* die();
+    return;
   }
 
   let B1;
@@ -137,77 +137,72 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
 
   while (true) {
     while (true) {
-      choice = parseInt(
+      A = parseInt(
         yield createNumericChoice(
           'HOW MUCH DO YOU WANT TO SPEND ON YOUR OXEN TEAM'
         ),
         10
       );
-      if (choice < 200) {
+      if (A < 200) {
         yield createInfo('NOT ENOUGH');
-      } else if (choice > 300) {
+      } else if (A > 300) {
         yield createInfo('TOO MUCH');
       } else {
-        A = choice;
         break;
       }
     }
 
     while (true) {
-      choice = parseInt(
+      F = parseInt(
         yield createNumericChoice('HOW MUCH DO YOU WANT TO SPEND ON FOOD'),
         10
       );
 
-      if (choice < 0) {
+      if (F < 0) {
         yield { text: 'IMPOSSIBLE' };
       } else {
-        F = choice;
         break;
       }
     }
 
     while (true) {
-      choice = parseInt(
+      B = parseInt(
         yield createNumericChoice(
           'HOW MUCH DO YOU WANT TO SPEND ON AMMUNITION'
         ),
         10
       );
 
-      if (choice < 0) {
+      if (B < 0) {
         yield { text: 'IMPOSSIBLE' };
       } else {
-        B = choice;
         break;
       }
     }
 
     while (true) {
-      choice = parseInt(
+      C = parseInt(
         yield createNumericChoice('HOW MUCH DO YOU WANT TO SPEND ON CLOTHING'),
         10
       );
 
-      if (choice < 0) {
+      if (C < 0) {
         yield createInfo('IMPOSSIBLE');
       } else {
-        C = choice;
         break;
       }
     }
 
     while (true) {
-      choice = parseInt(
+      M1 = parseInt(
         yield createNumericChoice(
           'HOW MUCH DO YOU WANT TO SPEND ON MISCELANEOUS SUPPLIES'
         ),
         10
       );
-      if (choice < 0) {
+      if (M1 < 0) {
         yield createInfo('IMPOSSIBLE');
       } else {
-        M1 = choice;
         break;
       }
     }
@@ -248,6 +243,12 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
         );
       }
 
+      F = Math.floor(F);
+      B = Math.floor(B);
+      C = Math.floor(C);
+      M1 = Math.floor(M1);
+      T = Math.floor(T);
+      M = Math.floor(M);
       M2 = M;
       if (S4 === 1 || K8 === 1) {
         T = T - 20;
@@ -259,6 +260,7 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
           T = 0;
           yield createInfo("YOU CAN'T AFFORD A DOCTOR");
           yield* medicalSuppliesDepleted();
+          return;
         }
       }
 
@@ -313,30 +315,31 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
         // ***STOPPING AT FORT***
         // 1500
         yield createInfo('ENTER WHAT YOU WISH TO SPEND ON THE FOLLOWING');
-        function updateMoney(value) {
-          if (value >= 0) {
-            T = T - value;
+        let P;
+        function updateMoney() {
+          if (P >= 0) {
+            T = T - P;
             if (T < 0) {
-              T = T + value;
-              value = 0;
+              T = T + P;
+              P = 0;
               return "YOU DON'T HAVE THAT MUCH--KEEP YOUR SPENDING DOWN";
             }
           }
         }
 
-        let P = parseInt(yield createNumericChoice('FOOD'), 10);
-        let warning = updateMoney(P);
+        P = parseInt(yield createNumericChoice('FOOD'), 10);
+        let warning = updateMoney();
         if (warning) {
           yield createInfo(warning);
         }
-        F = F + (2 / 3) * P; // todo check ordering
+        F = F + (2 / 3) * P;
 
         P = parseInt(yield createNumericChoice('AMMUNITION'), 10);
-        waring = updateMoney(P);
+        waring = updateMoney();
         if (warning) {
           yield createInfo(warning);
         }
-        B = Math.floor(B + (2 / 3) * P * 50); // todo check rounding rules
+        B = Math.floor(B + (2 / 3) * P * 50);
 
         P = parseInt(yield createNumericChoice('CLOTHING'), 10);
         waring = updateMoney(P);
@@ -361,10 +364,12 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
         M = M - 45;
         yield* shoot();
         if (B1 > 1) {
-          if (100 * Math.random() < 13) {
+          if (100 * Math.random() < 13 * B1) {
             yield createInfo('SORRY---NO LUCK TODAY');
           } else {
             F = F + 48 - 2 * B1;
+            yield createInfo('NICE SHOT--RIGHT THROUGH THE NECK--FEAST TONIGHT!!');
+            B = B - 10 - 3 * B1;
           }
         } else {
           // REM **BELLS IN LINE 1755**
@@ -620,6 +625,7 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
                     'YOU DIE OF SNAKEBITE SINCE YOU HAVE NO MEDICINE'
                   );
                   yield* die();
+                  return;
                 }
                 break;
               }
@@ -776,6 +782,7 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
         // ***DYING***
         yield createInfo('YOU RAN OUT OF FOOD AND STARVED TO DEATH');
         yield* die();
+        return;
       }
       // 1800
     } else {

@@ -10,14 +10,22 @@ function createChoice(text, choices) {
   const appElement = document.getElementById('app');
   createInfo(text);
   const promise = new Promise(resolve => {
+    const choiceButtons = [];
     choices.forEach((choice, index) => {
       const choiceButton = document.createElement('button');
       choiceButton.textContent = choice;
       let eventListener = () => {
         choiceButton.removeEventListener('click', eventListener);
+        for (const choiceButtonToRemove of choiceButtons) {
+          appElement.removeChild(choiceButtonToRemove);
+        }
+        const choiceValueElement = document.createElement('div');
+        choiceValueElement.textContent = choice;
+        appElement.appendChild(choiceValueElement);
         resolve(choice);
       };
       choiceButton.addEventListener('click', eventListener);
+      choiceButtons.push(choiceButton);
       appElement.appendChild(choiceButton);
       if (index === 0) {
         choiceButton.focus();
@@ -42,7 +50,13 @@ function createInput(text, type) {
     let eventListener = event => {
       enterButton.removeEventListener('click', eventListener);
       formElement.removeEventListener('submit', eventListener);
-      resolve(numberInput.value);
+      const value = numberInput.value;
+      resolve(value);
+      formElement.removeChild(numberInput);
+      formElement.removeChild(enterButton);
+      const numberValueElement = document.createElement('div');
+      numberValueElement.textContent = value;
+      formElement.appendChild(numberValueElement);
       event.preventDefault();
     };
     formElement.addEventListener('submit', eventListener);

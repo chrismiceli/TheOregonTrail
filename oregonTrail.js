@@ -466,7 +466,7 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
                   }
                 } else {
                   if (T1 <= 3) {
-                    if (Math.random() <= .8) {
+                    if (Math.random() <= 0.8) {
                       B = B - 150;
                       M1 = M1 - 15;
                       // goto 2395
@@ -476,7 +476,7 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
                     }
                   } else {
                     yield* shoot();
-                    B=B-B1*30-80;
+                    B = B - B1 * 30 - 80;
                     M = M - 25;
                     // goto 2235
                   }
@@ -484,8 +484,8 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
               }
             } else {
               if (T1 <= 1) {
-              M = M + 15;
-              A = A - 10;
+                M = M + 15;
+                A = A - 10;
               } else if (T1 <= 2) {
                 M = M - 5;
                 B = B - 100;
@@ -496,12 +496,16 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
 
             // 2395 here please?
             if (S5 !== 0) {
-              yield createInfo('RIDERS WERE FRIENDLY, BUT CHECK FOR POSSIBLE LOSSES');
+              yield createInfo(
+                'RIDERS WERE FRIENDLY, BUT CHECK FOR POSSIBLE LOSSES'
+              );
             } else {
               yield createInfo('RIDERS WERE HOSTILE--CHECK FOR LOSSES');
               if (B < 0) {
-                yield createInfo('YOU RAN OUT OF BULLETS AND GOT MASSACRED BY THE RIDERS');
-                yield *die();
+                yield createInfo(
+                  'YOU RAN OUT OF BULLETS AND GOT MASSACRED BY THE RIDERS'
+                );
+                yield* die();
                 return;
               }
             }
@@ -663,6 +667,11 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
           }
 
           // ***MOUNTAINS***
+          function checkClearPass() {
+            if (M <= 950) {
+              M9 = 1;
+            }
+          }
           if (M > 950) {
             if (
               Math.random() * 10 <=
@@ -676,66 +685,80 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
                   'YOU GOT LOST---LOSE VALUABLE TIME TRYING TO FIND TRAIL!'
                 );
                 M = M - 60;
-                // goto 3175
               } else {
                 if (Math.random() <= 0.11) {
                   yield createInfo('WAGON DAMAGED!---LOSE TIME AND SUPPLIES');
                   M1 = M1 - 5;
                   B = B - 200;
                   M = M - 20 - 30 * Math.random();
-                  //GOTO 3175
                 } else {
                   yield createInfo('THE GOING GETS SLOW');
                   M = M - 45 - Math.random() / 0.02;
-                  if (F1 !== 1) {
-                    F1 = 1;
-                    if (Math.random() >= 0.8) {
-                      yield createInfo(
-                        'YOU MADE IT SAFELY THROUGH SOUTH PASS--NO SNOW'
-                      );
-                      if (M >= 1700) {
-                        if (F2 !== 1) {
-                          F2 = 1;
-                          if (Math.random() >= 0.7) {
-                            if (M <= 950) {
-                              M9 = 1;
-                              // goto 700
-                            } else {
-                              // 700
-                            }
-                          } else {
-                            yield createInfo(
-                              'BLIZZARD IN MOUNTAIN PASS--TIME AND SUPPLIES LOST'
-                            );
-                            L1 = 1;
-                            F = F - 25;
-                            M1 = M1 - 10;
-                            B = B - 300;
-                            M = M - 30 - 40 * Math.random();
-                            if (C >= 18 + 2 * Math.random()) {
-                              // goto 3215
-                            } else {
-                              // goto 4700
-                            }
-                          }
-                        } else {
-                          // 3215
-                        }
-                      } else {
-                        // 3215
-                      }
+                }
+              }
+            }
+
+            const oldF1 = F1;
+            if (F1 !== 1) {
+              F1 = 1;
+            }
+            if (oldF1 !== 1 && Math.random() >= 0.8) {
+              yield createInfo(
+                'YOU MADE IT SAFELY THROUGH SOUTH PASS--NO SNOW'
+              );
+            }
+            if (M >= 1700 && F2 !== 1) {
+              F2 = 1;
+              if (Math.random() >= 0.7) {
+                checkClearPass();
+              } else {
+                yield createInfo(
+                  'BLIZZARD IN MOUNTAIN PASS--TIME AND SUPPLIES LOST'
+                );
+                L1 = 1;
+                F = F - 25;
+                M1 = M1 - 10;
+                B = B - 300;
+                M = M - 30 - 40 * Math.random();
+                if (C >= 18 + 2 * Math.random()) {
+                  checkClearPass();
+                } else {
+                  if (100 * Math.random() >= 10 + 35 * (E - 1)) {
+                    if (100 * Math.random() >= 100 - 40 / Math.pow(4, E - 1)) {
+                      yield createInfo('SERIOUS ILLNESS---');
+                      yield createInfo('YOU MUST STOP FOR MEDICAL ATTENTION');
+                      M1 = M1 - 10;
+                      S4 = 1;
                     } else {
-                      //3300
+                      yield createInfo('BAD ILLNESS---MEDICINE USED');
+                      M = M - 5;
+                      M1 = M1 - 5;
                     }
                   } else {
-                    //3195?
+                    yield createInfo('MILD ILLNESS---MEDICINE USED');
+                    M = M - 5;
+                    M1 = M1 - 2;
+                  }
+                  if (M1 >= 0) {
+                    if (L1 !== 1) {
+                      //3215 mountains
+                    }
+                    // 3100 mountains
+                  } else {
+                    yield createInfo('YOU RAN OUT MEDICAL SUPPLIES');
+                    yield* medicalSuppliesDepleted();
+                    return;
                   }
                 }
               }
             } else {
-              // goto 3175
+              checkClearPass();
             }
+          } else {
+            checkClearPass();
           }
+
+          // todo line 700
           // ***SETTING DATE***
           D3 = D3 + 1;
           let date = 'MONDAY ';

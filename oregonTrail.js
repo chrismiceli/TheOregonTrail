@@ -31,77 +31,19 @@ function* play() {
     };
   }
 
-  function* die() {
-    yield createInfo('DO TO YOUR UNFORTUNATE SITUATION, THERE ARE A FEW');
-    yield createInfo('FORMALITIES WE MUST GO THROUGH');
-    createChoice('WOULD YOU LIKE A MINISTER?', ['YES', 'NO']);
-    createChoice('WOULD YOU LIKE A FANCY FUNERAL?', ['YES', 'NO']);
-    const C$ = yield createChoice(
-      'WOULD YOU LIKE US TO INFORM YOUR NEXT OF KIN?',
-      ['YES', 'NO']
-    );
-    if (C$ !== 'YES') {
-      yield createInfo('YOUR AUNT NELLIE IN ST. LOUIS IS ANXIOUS TO HEAR');
-    }
-    yield createInfo('WE THANK YOU FOR THIS INFORMATION AND WE ARE SORRY YOU');
-    yield createInfo("DIDN'T MAKE IT TO THE GREAT TERRITORY OF OREGON");
-    yield createInfo('BETTER LUCK NEXT TIME');
-    yield createInfo('SINCERELY');
-    yield createInfo('THE OREGON CITY CHAMBER OF COMMERCE');
-    return;
-  }
-
-  let C$ = yield createChoice('DO YOU NEED INSTRUCTIONS', ['YES', 'NO']);
-  if (C$ !== 'NO') {
-    // ***INSTRUCTIONS***
-    yield createInfo(
-      `THIS PROGRAM SIMULATES A TRIP OVER THE OREGON TRAIL FROM
-INDEPENDENCE, MISSOURI TO OREGON CITY, OREGON IN 1847.
-YOUR FAMILY OF FIVE WILL COVER THE 2000 MILE OREGON TRAIL
-IN 5-6 MONTHS --- IF YOU MAKE IT ALIVE.
-        YOU HAD SAVED $900 TO SPEND FOR THE TRIP, AND YOU'VE JUST
-    PAID $200 FOR A WAGON.
-YOU WILL NEED TO SPEND THE REST OF YOUR MONEY ON THE
-    FOLLOWING ITEMS:
-            OXEN - YOU CAN SPEND $200-$300 ON YOUR TEAM
-            THE MORE YOU SPEND, THE FASTER YOU'LL GO
-                BECAUSE YOU'LL HAVE BETTER ANIMALS
-            FOOD - THE MORE YOU HAVE, THE LESS CHANCE THERE
-                IS OF GETTING SICK
-            AMMUNITION - $1 BUYS A BELT OF 50 BULLETS
-            YOU WILL NEED BULLETS FOR ATTACKS BY ANIMALS
-                AND BANDITS, AND FOR HUNTING FOOD
-            CLOTHING - THIS IS ESPECIALLY IMPORTANT FOR THE COLD
-                WEATHER YOU WILL ENCOUNTER WHEN CROSSING
-                THE MOUNTAINS
-            MISCELLANEOUS SUPPLIES - THIS INCLUDES MEDICINE AND
-                OTHER THINGS YOU WILL NEED FOR SICKNESS
-                AND EMERGENCY REPAIRS
-
-
-YOU CAN SPEND ALL YOUR MONEY BEFORE YOU START YOUR TRIP -
-OR YOU CAN SAVE SOME OF YOUR CASH TO SPEND AT FORTS ALONG
-THE WAY WHEN YOU RUN LOW.  HOWEVER, ITEMS COST MORE AT
-THE FORTS.  YOU CAN ALSO GO HUNTING ALONG THE WAY TO GET
-MORE FOOD.
-WHENEVER YOU HAVE TO USE YOUR TRUSTY RIFLE ALONG THE WAY,
-YOU WILL SEE THE WORDS: TYPE BANG.  THE FASTER YOU TYPE
-IN THE WORD 'BANG' AND HIT THE 'RETURN' KEY, THE BETTER
-LUCK YOU'LL HAVE WITH YOUR GUN.
-        WHEN ASKED TO ENTER MONEY AMOUNTS, DON'T USE A '$'.
-        GOOD LUCK!!!`
-    );
-  }
-
-  // ***INITIAL PURCHASES***
-  let X1 = -1;
-  let K8 = 0;
-  let S4 = 0;
-  let F1 = 0;
-  let F2 = 0;
-  let M = 0;
-  let M9 = 0;
-  let D3 = 0;
+  let instructionPointer = 30;
+  let returnPointer;
+  let X1;
+  let K8;
+  let S4;
+  let F1;
+  let F2;
+  let M;
+  let M9;
+  let D3;
+  let info;
+  let E;
+  let T1;
 
   let A;
   let F;
@@ -110,173 +52,356 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
   let M1;
   let T;
   let M2;
-
-  function* medicalSuppliesDepleted() {
-    const info = 'YOU DIED OF ';
-    if (K8 !== 1) {
-      yield createInfo(`${info}PNEUMONIA`);
-    } else {
-      yield createInfo(`${info}INJURIES`);
-    }
-    yield* die();
-    return;
-  }
-
-  let B1;
-  function* shoot() {
-    const B2 = 7;
-    const startTime = new Date();
-    const C = yield createStringChoice('TYPE BANG');
-    const endTime = new Date();
-    if (C !== 'BANG') {
-      B1 = 7;
-    } else {
-      B1 = Math.min((startTime - endTime) / 1000, B2);
-    }
-  }
-
+  let D1;
+  let DATA_INDEX;
+  let R1;
   while (true) {
-    while (true) {
-      A = parseInt(
-        yield createNumericChoice(
-          'HOW MUCH DO YOU WANT TO SPEND ON YOUR OXEN TEAM'
-        ),
-        10
-      );
-      if (A < 200) {
+    switch (instructionPointer) {
+      case 30: {
+        let C$ = yield createChoice('DO YOU NEED INSTRUCTIONS', ['YES', 'NO']);
+        if (C$ === 'NO') {
+          instructionPointer = 400;
+          break;
+        }
+        yield createInfo(
+          `THIS PROGRAM SIMULATES A TRIP OVER THE OREGON TRAIL FROM
+    INDEPENDENCE, MISSOURI TO OREGON CITY, OREGON IN 1847.
+    YOUR FAMILY OF FIVE WILL COVER THE 2000 MILE OREGON TRAIL
+    IN 5-6 MONTHS --- IF YOU MAKE IT ALIVE.
+            YOU HAD SAVED $900 TO SPEND FOR THE TRIP, AND YOU'VE JUST
+        PAID $200 FOR A WAGON.
+    YOU WILL NEED TO SPEND THE REST OF YOUR MONEY ON THE
+        FOLLOWING ITEMS:
+                OXEN - YOU CAN SPEND $200-$300 ON YOUR TEAM
+                THE MORE YOU SPEND, THE FASTER YOU'LL GO
+                    BECAUSE YOU'LL HAVE BETTER ANIMALS
+                FOOD - THE MORE YOU HAVE, THE LESS CHANCE THERE
+                    IS OF GETTING SICK
+                AMMUNITION - $1 BUYS A BELT OF 50 BULLETS
+                YOU WILL NEED BULLETS FOR ATTACKS BY ANIMALS
+                    AND BANDITS, AND FOR HUNTING FOOD
+                CLOTHING - THIS IS ESPECIALLY IMPORTANT FOR THE COLD
+                    WEATHER YOU WILL ENCOUNTER WHEN CROSSING
+                    THE MOUNTAINS
+                MISCELLANEOUS SUPPLIES - THIS INCLUDES MEDICINE AND
+                    OTHER THINGS YOU WILL NEED FOR SICKNESS
+                    AND EMERGENCY REPAIRS
+    
+    
+    YOU CAN SPEND ALL YOUR MONEY BEFORE YOU START YOUR TRIP -
+    OR YOU CAN SAVE SOME OF YOUR CASH TO SPEND AT FORTS ALONG
+    THE WAY WHEN YOU RUN LOW.  HOWEVER, ITEMS COST MORE AT
+    THE FORTS.  YOU CAN ALSO GO HUNTING ALONG THE WAY TO GET
+    MORE FOOD.
+    WHENEVER YOU HAVE TO USE YOUR TRUSTY RIFLE ALONG THE WAY,
+    YOU WILL SEE THE WORDS: TYPE BANG.  THE FASTER YOU TYPE
+    IN THE WORD 'BANG' AND HIT THE 'RETURN' KEY, THE BETTER
+    LUCK YOU'LL HAVE WITH YOUR GUN.
+            WHEN ASKED TO ENTER MONEY AMOUNTS, DON'T USE A '$'.
+            GOOD LUCK!!!`
+        );
+      }
+      case 400: {
+        X1 = -1;
+        K8 = S4 = F1 = F2 = M = M9 = D3 = 0;
+      }
+      case 415: {
+        A = parseInt(
+          yield createNumericChoice(
+            'HOW MUCH DO YOU WANT TO SPEND ON YOUR OXEN TEAM'
+          ),
+          10
+        );
+        if (A >= 200) {
+          instructionPointer = 440;
+          break;
+        }
         yield createInfo('NOT ENOUGH');
-      } else if (A > 300) {
+        instructionPointer = 415;
+        break;
+      }
+      case 440: {
+        if (A <= 300) {
+          instructionPointer = 455;
+          break;
+        }
         yield createInfo('TOO MUCH');
-      } else {
+        instructionPointer = 415;
         break;
       }
-    }
-
-    while (true) {
-      F = parseInt(
-        yield createNumericChoice('HOW MUCH DO YOU WANT TO SPEND ON FOOD'),
-        10
-      );
-
-      if (F < 0) {
-        yield { text: 'IMPOSSIBLE' };
-      } else {
-        break;
-      }
-    }
-
-    while (true) {
-      B = parseInt(
-        yield createNumericChoice(
-          'HOW MUCH DO YOU WANT TO SPEND ON AMMUNITION'
-        ),
-        10
-      );
-
-      if (B < 0) {
-        yield { text: 'IMPOSSIBLE' };
-      } else {
-        break;
-      }
-    }
-
-    while (true) {
-      C = parseInt(
-        yield createNumericChoice('HOW MUCH DO YOU WANT TO SPEND ON CLOTHING'),
-        10
-      );
-
-      if (C < 0) {
+      case 455: {
+        F = parseInt(
+          yield createNumericChoice('HOW MUCH DO YOU WANT TO SPEND ON FOOD'),
+          10
+        );
+        if (F >= 0) {
+          instructionPointer = 485;
+          break;
+        }
         yield createInfo('IMPOSSIBLE');
-      } else {
+        instructionPointer = 455;
         break;
       }
-    }
-
-    while (true) {
-      M1 = parseInt(
-        yield createNumericChoice(
-          'HOW MUCH DO YOU WANT TO SPEND ON MISCELANEOUS SUPPLIES'
-        ),
-        10
-      );
-      if (M1 < 0) {
+      case 485: {
+        B = parseInt(
+          yield createNumericChoice(
+            'HOW MUCH DO YOU WANT TO SPEND ON AMMUNITION'
+          ),
+          10
+        );
+        if (B >= 0) {
+          instructionPointer = 510;
+          break;
+        }
         yield createInfo('IMPOSSIBLE');
-      } else {
+        instructionPointer = 485;
         break;
       }
-    }
-
-    T = 700 - A - F - B - C - M1;
-    if (T < 0) {
-      yield createInfo('YOU OVERSPENT--YOU ONLY HAD $700 TO SPEND.  BUY AGAIN');
-    } else {
-      break;
-    }
-  }
-
-  B = 50 * B;
-  yield createInfo(`AFTER ALL YOUR PURCHASES, YOU NOW HAVE ${T} DOLLARS LEFT`);
-  yield createInfo('MONDAY MARCH 29 1847');
-  while (true) {
-    if (M < 2040 && D3 <= 17) {
-      // ***BEGINNING EACH TURN***
-      if (F < 0) {
+      case 510: {
+        C = parseInt(
+          yield createNumericChoice(
+            'HOW MUCH DO YOU WANT TO SPEND ON CLOTHING'
+          ),
+          10
+        );
+        if (C >= 0) {
+          instructionPointer = 535;
+          break;
+        }
+        yield createInfo('IMPOSSIBLE');
+        instructionPointer = 510;
+        break;
+      }
+      case 535: {
+        M1 = parseInt(
+          yield createNumericChoice(
+            'HOW MUCH DO YOU WANT TO SPEND ON MISCELANEOUS SUPPLIES'
+          ),
+          10
+        );
+        if (M1 >= 0) {
+          instructionPointer = 560;
+          break;
+        }
+        yield createInfo('IMPOSSIBLE');
+        instructionPointer = 535;
+        break;
+      }
+      case 560: {
+        T = 700 - A - F - B - C - M1;
+        if (T >= 0) {
+          instructionPointer = 580;
+          break;
+        }
+        yield createInfo(
+          'YOU OVERSPENT--YOU ONLY HAD $700 TO SPEND.  BUY AGAIN'
+        );
+        instructionPointer = 415;
+        break;
+      }
+      case 580: {
+        B = 50 * B;
+        yield createInfo(
+          `AFTER ALL YOUR PURCHASES, YOU NOW HAVE ${T} DOLLARS LEFT`
+        );
+        yield createInfo('MONDAY MARCH 29 1847');
+        instructionPointer = 1000;
+        break;
+      }
+      case 700: {
+        // ***SETTING DATE***
+        D3 = D3 + 1;
+        info = `MONDAY `;
+        if (D3 > 10) {
+          instructionPointer = 735;
+          break;
+        }
+        instructionPointer = [740, 750, 760, 770, 780, 790, 800, 810, 820, 830][
+          D3 - 1
+        ];
+        break;
+      }
+      case 735: {
+        instructionPointer = [840, 850, 860, 870, 880, 890, 900][D3 - 10 - 1];
+        break;
+      }
+      case 740: {
+        info = `${info}APRIL 12 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 750: {
+        info = `${info}APRIL 26 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 760: {
+        info = `${info}MAY 10 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 770: {
+        info = `${info}MAY 24 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 780: {
+        info = `${info}JUNE 7 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 790: {
+        info = `${info}JUNE 21 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 800: {
+        info = `${info}JULY 5 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 810: {
+        info = `${info}JULY 19 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 820: {
+        info = `${info}AUGUST 2 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 830: {
+        info = `${info}AUGUST 16 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 840: {
+        info = `${info}AUGUST 31 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 850: {
+        info = `${info}SEPTEMBER 13 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 860: {
+        info = `${info}SEPTEMBER 27 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 870: {
+        info = `${info}OCTOBER 11 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 880: {
+        info = `${info}OCTOBER 25 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 890: {
+        info = `${info}NOVEMBER 8 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 900: {
+        info = `${info}NOVEMBER 22 `;
+        instructionPointer = 910;
+        break;
+      }
+      case 910: {
+        yield createInfo(`${info} 1847`);
+      }
+      case 1000: {
+        // ***BEGINNING EACH TURN***
+        if (F >= 0) {
+          instructionPointer = 1015;
+          break;
+        }
         F = 0;
       }
-
-      if (B < 0) {
+      case 1015: {
+        if (B >= 0) {
+          instructionPointer = 1025;
+          break;
+        }
         B = 0;
       }
-
-      if (C < 0) {
+      case 1025: {
+        if (C >= 0) {
+          instructionPointer = 1035;
+          break;
+        }
         C = 0;
       }
-
-      if (M1 < 0) {
+      case 1035: {
+        if (M1 >= 0) {
+          instructionPointer = 1045;
+          break;
+        }
         M1 = 0;
       }
-
-      if (F < 12) {
+      case 1045: {
+        if (F >= 12) {
+          instructionPointer = 1055;
+          break;
+        }
         yield createInfo(
           "YOU'D BETTER DO SOME HUNTING OR BUY FOOD AND SOON!!!!"
         );
       }
-
-      F = Math.floor(F);
-      B = Math.floor(B);
-      C = Math.floor(C);
-      M1 = Math.floor(M1);
-      T = Math.floor(T);
-      M = Math.floor(M);
-      M2 = M;
-      if (S4 === 1 || K8 === 1) {
-        T = T - 20;
-        if (T >= 0) {
-          yield createInfo("DOCTOR'S BILL IS $20");
-          K8 = 0;
-          S4 = 0;
-        } else {
-          T = 0;
-          yield createInfo("YOU CAN'T AFFORD A DOCTOR");
-          yield* medicalSuppliesDepleted();
-          return;
+      case 1055: {
+        F = Math.floor(F);
+        B = Math.floor(B);
+        C = Math.floor(C);
+        M1 = Math.floor(M1);
+        T = Math.floor(T);
+        M = Math.floor(M);
+        M2 = M;
+        if (S4 === 1) {
+          instructionPointer = 1105;
+          break;
         }
+        if (K8 === 1) {
+          instructionPointer = 1105;
+          break;
+        }
+        instructionPointer = 1130;
+        break;
       }
-
-      if (M9 === 1) {
+      case 1105: {
+        T = T - 20;
+        if (T < 0) {
+          instructionPointer = 3520;
+          break;
+        }
+        yield createInfo("DOCTOR'S BILL IS $20");
+        K8 = S4 = 0;
+      }
+      case 1130: {
+        if (M9 === 1) {
+          instructionPointer = 1145;
+          break;
+        }
+        yield createInfo(`TOTAL MILEAGE IS ${M}`);
+        instructionPointer = 1160;
+        break;
+      }
+      case 1145: {
         yield createInfo('TOTAL MILEAGE IS 950');
         M9 = 0;
-      } else {
-        yield createInfo(`TOTAL MILEAGE IS ${M}`);
       }
-
-      yield createInfo('FOOD, BULLETS, CLOTHING, MISC. SUPP., CASH');
-      yield createInfo(`${F}, ${B}, ${C}, ${M1}, ${T}`);
-
-      let X;
-      if (X1 !== -1) {
+      case 1160: {
+        yield createInfo('FOOD, BULLETS, CLOTHING, MISC. SUPP., CASH');
+        yield createInfo(`${F}, ${B}, ${C}, ${M1}, ${T}`);
+        if (X1 === -1) {
+          instructionPointer = 1350;
+          break;
+        }
         X1 = X1 * -1;
+      }
+      case 1310: {
         X = parseInt(
           yield createChoice(
             'DO YOU WANT TO (1) STOP AT THE NEXT FORT, (2) HUNT, OR (3) CONTINUE',
@@ -284,597 +409,1048 @@ LUCK YOU'LL HAVE WITH YOUR GUN.
           ),
           10
         );
-
-        if (X > 2 || X < 1) {
-          X = 3;
+        if (X > 2) {
+          instructionPointer = 1340;
+          break;
         }
-      } else {
-        while (true) {
-          X = parseInt(
-            yield createChoice('DO YOU WANT TO (1) HUNT, OR (2) CONTINUE', [
-              '1',
-              '2',
-            ]),
-            10
-          );
-          if (X !== 1) {
-            X = 2;
-          }
-
-          X = X + 1;
-          if (X !== 3 && B <= 39) {
-            yield createInfo('TOUGH---YOU NEED MORE BULLETS TO GO HUNTING');
-          } else {
-            X1 = X1 * -1;
-            break;
-          }
+        if (X < 1) {
+          instructionPointer = 1340;
+          break;
         }
+        X = Math.floor(X);
+        instructionPointer = 1400;
+        break;
       }
-
-      if (X === 1) {
-        // ***STOPPING AT FORT***
-        // 1500
+      case 1340: {
+        X = 3;
+        instructionPointer = 1400;
+        break;
+      }
+      case 1350: {
+        X = parseInt(
+          yield createChoice('DO YOU WANT TO (1) HUNT, OR (2) CONTINUE', [
+            '1',
+            '2',
+          ]),
+          10
+        );
+        if (X === 1) {
+          instructionPointer = 1370;
+          break;
+        }
+        X = 2;
+      }
+      case 1370: {
+        X = X + 1;
+        if (X === 3) {
+          instructionPointer = 1395;
+          break;
+        }
+        if (B > 39) {
+          instructionPointer = 1395;
+          break;
+        }
+        yield createInfo('TOUGH---YOU NEED MORE BULLETS TO GO HUNTING');
+        instructionPointer = 1350;
+        break;
+      }
+      case 1395: {
+        X1 = X1 * -1;
+      }
+      case 1400: {
+        instructionPointer = [1500, 1700, 1800][X - 1];
+        break;
+      }
+      case 1500: {
         yield createInfo('ENTER WHAT YOU WISH TO SPEND ON THE FOLLOWING');
-        let P;
-        function updateMoney() {
-          if (P >= 0) {
-            T = T - P;
-            if (T < 0) {
-              T = T + P;
-              P = 0;
-              return "YOU DON'T HAVE THAT MUCH--KEEP YOUR SPENDING DOWN";
-            }
-          }
-        }
-
         P = parseInt(yield createNumericChoice('FOOD'), 10);
-        let warning = updateMoney();
-        if (warning) {
-          yield createInfo(warning);
+        returnPointer = 1515;
+        instructionPointer = 1520;
+        break;
+      }
+      case 1515: {
+        instructionPointer = 1555;
+        break;
+      }
+      case 1520: {
+        if (P < 0) {
+          instructionPointer = 1550;
+          break;
         }
+        T = T - P;
+        if (T >= 0) {
+          instructionPointer = 1550;
+          break;
+        }
+        yield createInfo("YOU DON'T HAVE THAT MUCH--KEEP YOUR SPENDING DOWN");
+        T = T + P;
+        P = 0;
+      }
+      case 1550: {
+        instructionPointer = returnPointer;
+        break;
+      }
+      case 1555: {
         F = F + (2 / 3) * P;
-
         P = parseInt(yield createNumericChoice('AMMUNITION'), 10);
-        waring = updateMoney();
-        if (warning) {
-          yield createInfo(warning);
-        }
+        returnPointer = 1570;
+        instructionPointer = 1520;
+        break;
+      }
+      case 1570: {
         B = Math.floor(B + (2 / 3) * P * 50);
-
         P = parseInt(yield createNumericChoice('CLOTHING'), 10);
-        waring = updateMoney(P);
-        if (warning) {
-          yield createInfo(warning);
-        }
+        returnPointer = 1585;
+        instructionPointer = 1520;
+        break;
+      }
+      case 1585: {
         C = C + (2 / 3) * P;
-
         P = parseInt(yield createNumericChoice('MISCELLANEOUS SUPPLIES'), 10);
-        waring = updateMoney(P);
-        if (warning) {
-          yield createInfo(warning);
-        }
+        returnPointer = 1600;
+        instructionPointer = 1520;
+        break;
+      }
+      case 1600: {
         M1 = M1 + (2 / 3) * P;
         M = M - 45;
-      } else if (X === 2) {
+        instructionPointer = 1800;
+        break;
+      }
+      case 1700: {
         // ***HUNTING***
-        if (B <= 39) {
-          yield createInfo('TOUGH---YOU NEED MORE BULLETS TO GO HUNTING');
-          // todo 1310
+        if (B > 39) {
+          instructionPointer = 1715;
+          break;
         }
+        yield createInfo('TOUGH---YOU NEED MORE BULLETS TO GO HUNTING');
+        instructionPointer = 1310;
+        break;
+      }
+      case 1715: {
         M = M - 45;
-        yield* shoot();
+        returnPointer = 1725;
+        instructionPointer = 4500;
+        break;
+      }
+      case 1725: {
+        if (B1 <= 1) {
+          instructionPointer = 1755;
+          break;
+        }
+        if (100 * Math.random() < 13 * B1) {
+          instructionPointer = 1780;
+          break;
+        }
+        F = F + 48 - 2 * B1;
+        yield createInfo('NICE SHOT--RIGHT THROUGH THE NECK--FEAST TONIGHT!!');
+        B = B - 10 - 3 * B1;
+        instructionPointer = 1800;
+        break;
+      }
+      case 1755: {
+        // **BELLS IN LINE 1755**
+        yield createInfo('RIGHT BETWEEN THE EYES---YOU GOT A BIG ONE!!!!');
+        F = F + 52 + Math.random() * 6;
+        B = B - 10 - Math.random() * 4;
+        instructionPointer = 1800;
+        break;
+      }
+      case 1780: {
+        yield createInfo('SORRY---NO LUCK TODAY');
+        if (F >= 13) {
+          instructionPointer = 1900;
+          break;
+        }
+        instructionPointer = 3500;
+        break;
+      }
+      case 1800: {
+        if (F >= 13) {
+          instructionPointer = 1900;
+          break;
+        }
+        instructionPointer = 3500;
+        break;
+      }
+      case 1900: {
+        // ***EATING***
+        E = parseInt(
+          yield createChoice(
+            'DO YOU WANT TO EAT (1) POORLY  (2) MODERATELY OR (3) WELL',
+            ['1', '2', '3']
+          ),
+          10
+        );
+        if (E > 3) {
+          instructionPointer = 1900;
+          break;
+        }
+        if (E < 1) {
+          instructionPointer = 1900;
+          break;
+        }
+        E = Math.floor(E);
+        F = F - 8 - 5 * E;
+        if (F >= 0) {
+          instructionPointer = 2000;
+          break;
+        }
+        F = F + 8 + 5 + E;
+        yield createInfo("YOU CAN'T EAT THAT WELL");
+        instructionPointer = 1900;
+        break;
+      }
+      case 2000: {
+        M = M + 200 + (A - 220) / 5 + 10 * Math.random();
+        L1 = C1 = 0;
+        // ***RIDERS ATTACK***
+        if (
+          Math.random() * 10 >
+          (Math.pow(M / 100 - 4, 2) + 72) / (Math.pow(M / 100 - 4, 2) + 12) - 1
+        ) {
+          instructionPointer = 2500;
+          break;
+        }
+        info = 'RIDERS AHEAD.  THEY ';
+        S5 = 0;
+        if (Math.random() < 0.8) {
+          instructionPointer = 2130;
+          break;
+        }
+        info = `${info} DON'T `;
+        S5 = 1;
+      }
+      case 2130: {
+        info = `${info}LOOK HOSTILE`;
+        info = '';
+        yield createInfo(info);
+        yield createInfo('TACTICS');
+      }
+      case 2140: {
+        let T1 = parseInt(
+          yield createChoice(
+            `(1) RUN  (2) ATTACK  (3) CONTINUE  (4) CIRCLE WAGONS
+IF YOU RUN YOU'LL GAIN TIME BUT WEAR DOWN YOUR OXEN
+IF YOU CIRCLE YOU'LL LOSE TIME`,
+            ['1', '2', '3', '4']
+          ),
+          10
+        );
+        if (T1 < 1) {
+          instructionPointer = 2140;
+          break;
+        }
+        if (T1 > 4) {
+          instructionPointer = 2140;
+          break;
+        }
+        T1 = Math.floor(T1);
+        if (S5 === 1) {
+          instructionPointer = 2330;
+          break;
+        }
+        if (T1 > 1) {
+          instructionPointer = 2220;
+          break;
+        }
+        M = M + 20;
+        M1 = M1 - 15;
+        B = B - 150;
+        A = A - 40;
+        instructionPointer = 2395;
+        break;
+      }
+      case 2220: {
+        if (T1 > 2) {
+          instructionPointer = 2285;
+          break;
+        }
+        returnPointer = 2230;
+        instructionPointer = 4500;
+        break;
+      }
+      case 2230: {
+        B = B - B1 * 40 - 80;
+      }
+      case 2235: {
         if (B1 > 1) {
-          if (100 * Math.random() < 13 * B1) {
-            yield createInfo('SORRY---NO LUCK TODAY');
-          } else {
-            F = F + 48 - 2 * B1;
-            yield createInfo(
-              'NICE SHOT--RIGHT THROUGH THE NECK--FEAST TONIGHT!!'
-            );
-            B = B - 10 - 3 * B1;
-          }
-        } else {
-          // REM **BELLS IN LINE 1755**
-          yield createInfo('RIGHT BETWEEN THE EYES---YOU GOT A BIG ONE!!!!');
-          F = F + 52 + Math.random() * 6;
-          B = B - 10 - Math.random() * 4;
+          instructionPointer = 2250;
+          break;
+        }
+        yield createInfo('NICE SHOOTING---YOU DROVE THEM OFF');
+        instructionPointer = 2395;
+        break;
+      }
+      case 2250: {
+        if (B1 <= 4) {
+          instructionPointer == 2275;
+          break;
+        }
+        yield createInfo('LOUSY SHOT---YOU GOT KNIFED');
+        K8 = 1;
+        yield createInfo("YOU HAVE TO SEE OL' DOC BLANCHARD");
+        instructionPointer = 2395;
+        break;
+      }
+      case 2275: {
+        yield createInfo('KINDA SLOW WITH YOUR COLT .45');
+        instructionPointer = 2395;
+        break;
+      }
+      case 2285: {
+        if (T1 > 3) {
+          instructionPointer = 2310;
+          break;
+        }
+        if (Math.random() > 0.8) {
+          instructionPointer = 2390;
+          break;
+        }
+        B = B - 150;
+        M1 = M1 - 15;
+        instructionPointer = 2395;
+        break;
+      }
+      case 2310: {
+        returnPointer = 2315;
+        instructionPointer = 4500;
+        break;
+      }
+      case 2315: {
+        B = B - B1 * 30 - 80;
+        M = M - 25;
+        instructionPointer = 2235;
+        break;
+      }
+      case 2330: {
+        if (T1 > 1) {
+          instructionPointer = 2350;
+          break;
+        }
+        M = M + 15;
+        A = A - 10;
+        instructionPointer = 2395;
+        break;
+      }
+      case 2350: {
+        if (T1 > 2) {
+          instructionPointer = 2370;
+          break;
+        }
+        M = M - 5;
+        B = B - 100;
+        instructionPointer = 2395;
+        break;
+      }
+      case 2370: {
+        if (T1 > 3) {
+          instructionPointer = 2380;
+          break;
+        }
+        instructionPointer = 2395;
+        break;
+      }
+      case 2380: {
+        M = M - 20;
+        instructionPointer = 2395;
+        break;
+      }
+      case 2390: {
+        yield createInfo('THEY DID NOT ATTACK');
+        instructionPointer = 2500;
+        break;
+      }
+      case 2395: {
+        if (S5 === 0) {
+          instructionPointer = 2410;
+          break;
+        }
+        yield createInfo('RIDERS WERE FRIENDLY, BUT CHECK FOR POSSIBLE LOSSES');
+        instructionPointer = 2500;
+        break;
+      }
+      case 2410: {
+        yield createInfo('RIDERS WERE HOSTILE--CHECK FOR LOSSES');
+        if (B >= 0) {
+          instructionPointer = 2500;
+          break;
+        }
+        yield createInfo(
+          'YOU RAN OUT OF BULLETS AND GOT MASSACRED BY THE RIDERS'
+        );
+        instructionPointer = 3600;
+        break;
+      }
+      case 2500: {
+        // ***SELECTION OF EVENTS***
+        D1 = 0;
+        R1 = 100 * Math.random();
+      }
+      case 2515: {
+        D1 = D1 + 1;
+        if (D1 === 16) {
+          instructionPointer = 3020;
+          break;
+        }
+        const DATA = [
+          6,
+          11,
+          13,
+          15,
+          17,
+          22,
+          32,
+          35,
+          37,
+          42,
+          44,
+          54,
+          64,
+          69,
+          95,
+        ];
+        const D = DATA[DATA_INDEX];
+        DATA_INDEX += 1;
+        if (R1 > D) {
+          instructionPointer = 2515;
+          break;
+        }
+        if (D1 > 10) {
+          instructionPointer = 2545;
+          break;
+        }
+        instructionPointer = [
+          2550,
+          2570,
+          2590,
+          2615,
+          2630,
+          2645,
+          2660,
+          2690,
+          2785,
+          2810,
+        ][D1 - 1];
+        break;
+      }
+      case 2545: {
+        instructionPointer = [2825, 2860, 2885, 2970, 2990, 3020][D1 - 10 - 1];
+        break;
+      }
+      case 2550: {
+        yield createInfo('WAGON BREAKS DOWN--LOSE TIME AND SUPPLIES FIXING IT');
+        M = M - 15 - 5 * Math.random();
+        M1 = M1 - 8;
+        instructionPointer = 3100;
+        break;
+      }
+      case 2570: {
+        yield createInfo('OX INJURES LEG---SLOWS YOU DOWN REST OF TRIP');
+        M = M - 25;
+        A = A - 20;
+        instructionPointer = 3100;
+        break;
+      }
+      case 2590: {
+        yield createInfo('BAD LUCK---YOUR DAUGHTER BROKE HER ARM');
+        yield createInfo('YOU HAD TO STOP AND USE SUPPLIES TO MAKE A SLING');
+        M = M - 5 - 4 * Math.random();
+        M1 = M1 - 2 - 3 * Math.random();
+        instructionPointer = 3100;
+        break;
+      }
+      case 2615: {
+        yield createInfo('OX WANDERS OFF---SPEND TIME LOOKING FOR IT');
+        M = M - 17;
+        instructionPointer = 3100;
+        break;
+      }
+      case 2630: {
+        yield createInfo(
+          'YOUR SON GETS LOST---SPEND HALF THE DAY LOOKING FOR HIM'
+        );
+        M = M - 10;
+        instructionPointer = 3100;
+        break;
+      }
+      case 2645: {
+        yield createInfo('UNSAFE WATER--LOSE TIME LOOKING FOR CLEAN SPRING');
+        M = M - 10 * Math.random() - 2;
+        instructionPointer = 3100;
+        break;
+      }
+      case 2660: {
+        if (M > 950) {
+          instructionPointer = 2935;
+          break;
+        }
+        yield createInfo('HEAVY RAINS---TIME AND SUPPLIES LOST');
+        F = F - 10;
+        B = B - 500;
+        M1 = M1 - 15;
+        M = M - 10 * Math.random() - 5;
+        instructionPointer = 3100;
+        break;
+      }
+      case 2690: {
+        yield createInfo('BANDITS ATTACK');
+        instructionPointer = 4500;
+        returnPointer = 2705;
+        break;
+      }
+      case 2705: {
+        B = B - 20 * B1;
+        if (B >= 0) {
+          instructionPointer = 2735;
+          break;
+        }
+        yield createInfo('YOU RAN OUT OF BULLETS---THEY GET LOTS OF CASH');
+        T = T / 3;
+        instructionPointer = 2740;
+        break;
+      }
+      case 2735: {
+        if (B1 <= 1) {
+          instructionPointer = 2770;
+          break;
         }
       }
-
-      // ***EATING***
-      if (F >= 13) {
-        while (true) {
-          let E;
-          while (true) {
-            E = parseInt(
-              yield createChoice(
-                'DO YOU WANT TO EAT (1) POORLY  (2) MODERATELY OR (3) WELL',
-                ['1', '2', '3']
-              ),
-              10
-            );
-            if (E > 3 || E < 1) {
-              continue;
-            }
-
-            F = F - 8 - 5 * E;
-            if (F < 0) {
-              F = F + 8 + 5 * E;
-              yield createInfo("YOU CAN'T EAT THAT WELL");
-            } else {
-              break;
-            }
-          }
-
-          M = M + 200 + (A - 220) / 5 + 10 * Math.random();
-          let L1 = 0;
-          let C1 = 0;
-          // ***RIDERS ATTACK***
-          if (
-            Math.random() * 10 <=
-            (Math.pow(M / 100 - 4, 2) + 72) / (Math.pow(M / 100 - 4, 2) + 12) -
-              1
-          ) {
-            let info = 'RIDERS AHEAD.  THEY ';
-            let S5 = 0;
-            if (Math.random() >= 0.8) {
-              info = `${info} DON'T`;
-              S5 = 1;
-            }
-
-            info = `${info} LOOK HOSTILE`;
-            yield createInfo(info);
-            yield createInfo('TACTICS');
-            let T1;
-            while (true) {
-              T1 = parseInt(
-                yield createChoice(
-                  `(1) RUN  (2) ATTACK  (3) CONTINUE  (4) CIRCLE WAGONS
-  IF YOU RUN YOU'LL GAIN TIME BUT WEAR DOWN YOUR OXEN
-  IF YOU CIRCLE YOU'LL LOSE TIME`,
-                  ['1', '2', '3', '4']
-                ),
-                10
-              );
-              if (Math.random() <= 0.2) {
-                S5 = 1 - S5;
-              }
-              if (T1 >= 1 && T1 <= 4) {
-                break;
-              }
-            }
-            if (S5 !== 1) {
-              if (T1 <= 1) {
-                M = M + 20;
-                M1 = M1 - 15;
-                B = B - 150;
-                A = A - 40;
-              } else {
-                if (T1 <= 2) {
-                  yield* shoot();
-                  B = B - B1 * 40 - 80;
-                  if (B1 <= 1) {
-                    yield createInfo('NICE SHOOTING---YOU DROVE THEM OFF');
-                  } else {
-                    if (B1 > 4) {
-                      yield createInfo('LOUSY SHOT---YOU GOT KNIFED');
-                      K8 = 1;
-                      yield createInfo("YOU HAVE TO SEE OL' DOC BLANCHARD");
-                    } else {
-                      yield createInfo('KINDA SLOW WITH YOUR COLT .45');
-                    }
-                  }
-                } else {
-                  if (T1 <= 3) {
-                    if (Math.random() <= 0.8) {
-                      B = B - 150;
-                      M1 = M1 - 15;
-                      // goto 2395
-                    } else {
-                      yield createInfo('THEY DID NOT ATTACK');
-                      // goto 2500
-                    }
-                  } else {
-                    yield* shoot();
-                    B = B - B1 * 30 - 80;
-                    M = M - 25;
-                    // goto 2235
-                  }
-                }
-              }
-            } else {
-              if (T1 <= 1) {
-                M = M + 15;
-                A = A - 10;
-              } else if (T1 <= 2) {
-                M = M - 5;
-                B = B - 100;
-              } else if (T1 > 3) {
-                M = M - 20;
-              }
-            }
-
-            // 2395 here please?
-            if (S5 !== 0) {
-              yield createInfo(
-                'RIDERS WERE FRIENDLY, BUT CHECK FOR POSSIBLE LOSSES'
-              );
-            } else {
-              yield createInfo('RIDERS WERE HOSTILE--CHECK FOR LOSSES');
-              if (B < 0) {
-                yield createInfo(
-                  'YOU RAN OUT OF BULLETS AND GOT MASSACRED BY THE RIDERS'
-                );
-                yield* die();
-                return;
-              }
-            }
-          }
-          // ***SELECTION OF EVENTS***
-          const DATA = [
-            6,
-            11,
-            13,
-            15,
-            17,
-            22,
-            32,
-            35,
-            37,
-            42,
-            44,
-            54,
-            64,
-            69,
-            95,
-          ];
-          let D1 = 0;
-          let DATA_INDEX = 0; // RESTORE
-          R1 = 100 * Math.random();
-          while (true) {
-            D1 = D1 + 1;
-            if (D1 !== 16) {
-              const D = DATA[DATA_INDEX - 1];
-              DATA_INDEX = DATA_INDEX + 1;
-              if (R1 <= D) {
-                break;
-              }
-            } else {
-              break;
-            }
-          }
-
-          switch (D1) {
-            case 1: {
-              yield createInfo(
-                'WAGON BREAKS DOWN--LOSE TIME AND SUPPLIES FIXING IT'
-              );
-              M = M - 15 - 5 * Math.random();
-              M1 = M1 - 8;
-              break;
-            }
-            case 2: {
-              yield createInfo('OX INJURES LEG---SLOWS YOU DOWN REST OF TRIP');
-              M = M - 25;
-              A = A - 20;
-              break;
-            }
-            case 3: {
-              yield createInfo('BAD LUCK---YOUR DAUGHTER BROKE HER ARM');
-              yield createInfo(
-                'YOU HAD TO STOP AND USE SUPPLIES TO MAKE A SLING'
-              );
-              M = M - 5 - 4 * Math.random();
-              M1 = M1 - 2 - 3 * Math.random();
-              break;
-            }
-            case 4: {
-              yield createInfo('OX WANDERS OFF---SPEND TIME LOOKING FOR IT');
-              M = M - 17;
-              break;
-            }
-            case 5: {
-              yield createInfo(
-                'YOUR SON GETS LOST---SPEND HALF THE DAY LOOKING FOR HIM'
-              );
-              M = M - 10;
-              break;
-            }
-            case 6: {
-              yield createInfo(
-                'UNSAFE WATER--LOSE TIME LOOKING FOR CLEAN SPRING'
-              );
-              M = M - 10 * Math.random() - 2;
-              break;
-            }
-            case 7: {
-              if (M <= 950) {
-                yield createInfo('HEAVY RAINS---TIME AND SUPPLIES LOST');
-                F = F - 10;
-                B = B - 500;
-                M1 = M1 - 15;
-                M = M - 10 * Math.random() - 5;
-              } else {
-                // todo 2935
-              }
-              break;
-            }
-            case 8: {
-              yield createInfo('BANDITS ATTACK');
-              // todo 4500 goto sub
-              break;
-            }
-            case 9: {
-              yield createInfo(
-                'THERE WAS A FIRE IN YOUR WAGON--FOOD AND SUPPLIES DAMAGED'
-              );
-              F = F - 40;
-              B = B - 400;
-              M1 = M1 - Math.random() * 8 - 3;
-              M = M - 15;
-              break;
-            }
-            case 10: {
-              yield createInfo('LOSE YOUR WAY IN HEAVY FOG---TIME IS LOST');
-              M = M - 10 - 5 * Math.random();
-              break;
-            }
-            case 11: {
-              yield createInfo('YOU KILLED A POISONOUS SNAKE AFTER IT BIT YOU');
-              B = B - 10;
-              M1 = M1 - 5;
-              if (M1 < 0) {
-                yield createInfo(
-                  'YOU DIE OF SNAKEBITE SINCE YOU HAVE NO MEDICINE'
-                );
-                yield* die();
-                return;
-              }
-              break;
-            }
-            case 12: {
-              yield createInfo(
-                'WAGON GETS SWAMPED FORDING RIVER--LOSE FOOD AND CLOTHES'
-              );
-              F = F - 30;
-              C = C - 20;
-              M = M - 20 - 20 * Math.random();
-              break;
-            }
-            case 13: {
-              yield createInfo('WILD ANIMALS ATTACK!');
-              // todo
-              break;
-            }
-            case 14: {
-              yield createInfo('HAIL STORM---SUPPLIES DAMAGED');
-              M = M - 5 - Math.random() * 10;
-              B = B - 200;
-              M1 = M1 - 4 - Math.random() * 3;
-              break;
-            }
-            case 15: {
-              // todo 2990
-            }
-            default:
-            case 16: {
-              yield createInfo(
-                'HELPFUL INDIANS SHOW YOU WHERE TO FIND MORE FOOD'
-              );
-              F = F + 14;
-              break;
-            }
-          }
-
-          // ***MOUNTAINS***
-          function checkClearPass() {
-            if (M <= 950) {
-              M9 = 1;
-            }
-          }
-          if (M > 950) {
-            if (
-              Math.random() * 10 <=
-              9 -
-                (Math.pow(M / 100 - 15, 2) + 72) /
-                  (Math.pow(M / 100 - 15, 2) + 12)
-            ) {
-              yield createInfo('RUGGED MOUNTAINS');
-              if (Math.random() <= 0.1) {
-                yield createInfo(
-                  'YOU GOT LOST---LOSE VALUABLE TIME TRYING TO FIND TRAIL!'
-                );
-                M = M - 60;
-              } else {
-                if (Math.random() <= 0.11) {
-                  yield createInfo('WAGON DAMAGED!---LOSE TIME AND SUPPLIES');
-                  M1 = M1 - 5;
-                  B = B - 200;
-                  M = M - 20 - 30 * Math.random();
-                } else {
-                  yield createInfo('THE GOING GETS SLOW');
-                  M = M - 45 - Math.random() / 0.02;
-                }
-              }
-            }
-
-            const oldF1 = F1;
-            if (F1 !== 1) {
-              F1 = 1;
-            }
-            if (oldF1 !== 1 && Math.random() >= 0.8) {
-              yield createInfo(
-                'YOU MADE IT SAFELY THROUGH SOUTH PASS--NO SNOW'
-              );
-            }
-            if (M >= 1700 && F2 !== 1) {
-              F2 = 1;
-              if (Math.random() >= 0.7) {
-                checkClearPass();
-              } else {
-                yield createInfo(
-                  'BLIZZARD IN MOUNTAIN PASS--TIME AND SUPPLIES LOST'
-                );
-                L1 = 1;
-                F = F - 25;
-                M1 = M1 - 10;
-                B = B - 300;
-                M = M - 30 - 40 * Math.random();
-                if (C >= 18 + 2 * Math.random()) {
-                  checkClearPass();
-                } else {
-                  if (100 * Math.random() >= 10 + 35 * (E - 1)) {
-                    if (100 * Math.random() >= 100 - 40 / Math.pow(4, E - 1)) {
-                      yield createInfo('SERIOUS ILLNESS---');
-                      yield createInfo('YOU MUST STOP FOR MEDICAL ATTENTION');
-                      M1 = M1 - 10;
-                      S4 = 1;
-                    } else {
-                      yield createInfo('BAD ILLNESS---MEDICINE USED');
-                      M = M - 5;
-                      M1 = M1 - 5;
-                    }
-                  } else {
-                    yield createInfo('MILD ILLNESS---MEDICINE USED');
-                    M = M - 5;
-                    M1 = M1 - 2;
-                  }
-                  if (M1 >= 0) {
-                    if (L1 !== 1) {
-                      //3215 mountains
-                    }
-                    // 3100 mountains
-                  } else {
-                    yield createInfo('YOU RAN OUT MEDICAL SUPPLIES');
-                    yield* medicalSuppliesDepleted();
-                    return;
-                  }
-                }
-              }
-            } else {
-              checkClearPass();
-            }
-          } else {
-            checkClearPass();
-          }
-
-          // todo line 700
-          // ***SETTING DATE***
-          D3 = D3 + 1;
-          let date = 'MONDAY ';
-          if (D3 === 1) {
-            date = `${date}APRIL 12 `;
-          } else if (D3 === 2) {
-            date = `${date}APRIL 26 `;
-          } else if (D3 === 3) {
-            date = `${date}MAY 10 `;
-          } else if (D3 === 4) {
-            date = `${date}MAY 24 `;
-          } else if (D3 === 5) {
-            date = `${date}JUNE 7 `;
-          } else if (D3 === 6) {
-            date = `${date}JUNE 21 `;
-          } else if (D3 === 7) {
-            date = `${date}JULY 5 `;
-          } else if (D3 === 8) {
-            date = `${date}JULY 19 `;
-          } else if (D3 === 9) {
-            date = `${date}AUGUST 2 `;
-          } else if (D3 === 10) {
-            date = `${date}AUGUST 16 `;
-          } else if (D3 === 11) {
-            date = `${date}AUGUST 31 `;
-          } else if (D3 === 12) {
-            date = `${date}SEPTEMBER 13 `;
-          } else if (D3 === 13) {
-            date = `${date}SEPTEMBER 27 `;
-          } else if (D3 === 14) {
-            date = `${date}OCTOBER 11 `;
-          } else if (D3 === 15) {
-            date = `${date}OCTOBER 25 `;
-          } else if (D3 === 16) {
-            date = `${date}NOVEMBER 8 `;
-          } else if (D3 === 17) {
-            date = `${date}NOVEMBER 22 `;
-          }
-          yield createInfo(`${date}1847`);
+      case 2740: {
+        yield createInfo(
+          'YOU GOT SHOT IN THE LEG AND THEY TOOK ONE OF YOUR OXEN'
+        );
+        K8 = 1;
+        yield createInfo('BETTER HAVE A DOC LOOK AT YOUR WOUND');
+        M1 = M1 - 5;
+        A = A - 20;
+        instructionPointer = 3100;
+        break;
+      }
+      case 2770: {
+        yield createInfo('QUICKEST DRAW OUTSIDE OF DODGE CITY!!!');
+        yield createInfo("YOU GOT 'EM!");
+        instructionPointer = 3100;
+        break;
+      }
+      case 2785: {
+        yield createInfo(
+          'THERE WAS A FIRE IN YOUR WAGON--FOOD AND SUPPLIES DAMAGED'
+        );
+        F = F - 40;
+        B = B - 400;
+        M1 = M1 - Math.random() * 8 - 3;
+        M = M - 15;
+        instructionPointer = 3100;
+        break;
+      }
+      case 2810: {
+        yield createInfo('LOSE YOUR WAY IN HEAVY FOG---TIME IS LOST');
+        M = M - 10 - 5 * Math.random();
+        instructionPointer = 3100;
+        break;
+      }
+      case 2825: {
+        yield createInfo('YOU KILLED A POISONOUS SNAKE AFTER IT BIT YOU');
+        B = B - 10;
+        M1 = M1 - 5;
+        if (M1 >= 0) {
+          instructionPointer = 2855;
+          break;
         }
-      } else {
+        yield createInfo('YOU DIE OF SNAKEBITE SINCE YOU HAVE NO MEDICINE');
+        instructionPointer = 3600;
+        break;
+      }
+      case 2855: {
+        instructionPointer = 3100;
+        break;
+      }
+      case 2860: {
+        yield createInfo(
+          'WAGON GETS SWAMPED FORDING RIVER--LOSE FOOD AND CLOTHES'
+        );
+        F = F - 30;
+        C = C - 20;
+        M = M - 20 - 20 * Math.random();
+        instructionPointer = 3100;
+        break;
+      }
+      case 2885: {
+        yield createInfo('WILD ANIMALS ATTACK!');
+        instructionPointer = 4500;
+        returnPointer = 2889;
+        break;
+      }
+      case 2889: {
+        if (B > 39) {
+          instructionPointer = 2895;
+          break;
+        }
+        yield createInfo('YOU WERE TOO LOW ON BULLETS--');
+        yield createInfo('THE WOLVES OVERPOWERED YOU');
+        K8 = 1;
+        instructionPointer = 3555;
+        break;
+      }
+      case 2895: {
+        if (B1 > 2) {
+          instructionPointer = 2910;
+          break;
+        }
+        yield createInfo("NICE SHOOTIN' PARDNER---THEY DIDN'T GET MUCH");
+        instructionPointer = 2915;
+        break;
+      }
+      case 2910: {
+        yield createInfo(
+          'SLOW ON THE DRAW---THEY GOT AT YOUR FOOD AND CLOTHES'
+        );
+      }
+      case 2915: {
+        B = B - 20 * B1;
+        C = C - B1 * 4;
+        F = F - B1 * 8;
+        instructionPointer = 3100;
+        break;
+      }
+      case 2935: {
+        info = 'COLD WEATHER---BRRRRRRR!---YOU ';
+        if (C > 22 + 4 * Math.random()) {
+          instructionPointer = 2955;
+          break;
+        }
+        info = `${info}DON'T `;
+        C1 = 1;
+      }
+      case 2955: {
+        info = `${info}HAVE ENOUGH CLOTHING TO KEEP YOU WARM`;
+        if ((C1 = 0)) {
+          instructionPointer = 3100;
+          break;
+        }
+        instructionPointer = 4700;
+        break;
+      }
+      case 2970: {
+        yield createInfo('HAIL STORM---SUPPLIES DAMAGED');
+        M = M - 5 - Math.random() * 10;
+        B = B - 200;
+        M1 = M1 - 4 - Math.random() * 3;
+        instructionPointer = 3100;
+        break;
+      }
+      case 2990: {
+        if (E === 1) {
+          instructionPointer = 4700;
+          break;
+        }
+        if (E === 3) {
+          instructionPointer = 3010;
+          break;
+        }
+        if (Math.random() > 0.25) {
+          instructionPointer = 4700;
+          break;
+        }
+        instructionPointer = 3100;
+        break;
+      }
+      case 3010: {
+        if (Math.random() < 0.5) {
+          instructionPointer = 4700;
+          break;
+        }
+        instructionPointer = 3100;
+        break;
+      }
+      case 3020: {
+        yield createInfo('HELPFUL INDIANS SHOW YOU WHERE TO FIND MORE FOOD');
+        F = F + 14;
+        instructionPointer = 3100;
+        break;
+      }
+      case 3100: {
+        // ***MOUNTAINS***
+        if (M <= 950) {
+          instructionPointer = 700;
+          break;
+        }
+        if (
+          Math.random() * 10 >
+          9 -
+            (Math.pow(M / 100 - 15, 2) + 72) / (Math.pow(M / 100 - 15, 2) + 12)
+        ) {
+          instructionPointer = 3175;
+          break;
+        }
+        yield createInfo('RUGGED MOUNTAINS');
+        if (Math.random() > 0.1) {
+          instructionPointer = 3135;
+          break;
+        }
+        yield createInfo(
+          'YOU GOT LOST---LOSE VALUABLE TIME TRYING TO FIND TRAIL!'
+        );
+        M = M - 60;
+        instructionPointer = 3175;
+        break;
+      }
+      case 3135: {
+        if (Math.random() > 0.11) {
+          instructionPointer = 3160;
+          break;
+        }
+        yield createInfo('WAGON DAMAGED!---LOSE TIME AND SUPPLIES');
+        M1 = M1 - 5;
+        B = B - 200;
+        M = M - 20 - 30 * Math.random();
+        instructionPointer = 3175;
+        break;
+      }
+      case 3160: {
+        yield createInfo('THE GOING GETS SLOW');
+        M = M - 45 - Math.random() / 0.02;
+      }
+      case 3175: {
+        if (F1 === 1) {
+          instructionPointer = 3195;
+          break;
+        }
+        F1 = 1;
+        if (Math.random() < 0.8) {
+          instructionPointer = 3300;
+          break;
+        }
+        yield createInfo('YOU MADE IT SAFELY THROUGH SOUTH PASS--NO SNOW');
+      }
+      case 3195: {
+        if (M < 1700) {
+          instructionPointer = 3215;
+          break;
+        }
+        if (F2 === 1) {
+          instructionPointer = 3215;
+          break;
+        }
+        F2 = 1;
+        if (Math.random() < 0.7) {
+          instructionPointer = 3300;
+          break;
+        }
+      }
+      case 3215: {
+        if (M > 950) {
+          instructionPointer = 700;
+          break;
+        }
+        M9 = 1;
+        instructionPointer = 700;
+        break;
+      }
+      case 3300: {
+        yield createInfo('BLIZZARD IN MOUNTAIN PASS--TIME AND SUPPLIES LOST');
+        L1 = 1;
+        F = F - 25;
+        M1 = M1 - 10;
+        B = B - 300;
+        M = M - 30 - 40 * Math.random();
+        if (C < 18 + 2 * Math.random()) {
+          instructionPointer = 4700;
+          break;
+        }
+        instructionPointer = 3215;
+        break;
+      }
+      case 3500: {
         // ***DYING***
         yield createInfo('YOU RAN OUT OF FOOD AND STARVED TO DEATH');
-        yield* die();
+        instructionPointer = 3600;
+        break;
+      }
+      case 3520: {
+        T = 0;
+        yield createInfo("YOU CAN'T AFFORD A DOCTOR");
+        instructionPointer = 3555;
+        break;
+      }
+      case 3550: {
+        yield createInfo('YOU RAN OUT MEDICAL SUPPLIES');
+      }
+      case 3555: {
+        info = 'YOU DIED OF ';
+        if (K8 === 1) {
+          instructionPointer = 3575;
+          break;
+        }
+        info = `${info}PNEUMONIA`;
+        instructionPointer = 3600;
+        break;
+      }
+      case 3575: {
+        info = `${info}INJURIES`;
+      }
+      case 3600: {
+        yield createInfo('DO TO YOUR UNFORTUNATE SITUATION, THERE ARE A FEW');
+        yield createInfo('FORMALITIES WE MUST GO THROUGH');
+        yield createChoice('WOULD YOU LIKE A MINISTER?', ['YES', 'NO']);
+        yield createChoice('WOULD YOU LIKE A FANCY FUNERAL?', ['YES', 'NO']);
+        const C$ = yield createChoice(
+          'WOULD YOU LIKE US TO INFORM YOUR NEXT OF KIN?',
+          ['YES', 'NO']
+        );
+        if (C$.toUpperCase() === 'YES') {
+          instructionPointer = 3670;
+          break;
+        }
+        yield createInfo('YOUR AUNT NELLIE IN ST. LOUIS IS ANXIOUS TO HEAR');
+      }
+      case 3670: {
+        yield createInfo(
+          'WE THANK YOU FOR THIS INFORMATION AND WE ARE SORRY YOU'
+        );
+        yield createInfo("DIDN'T MAKE IT TO THE GREAT TERRITORY OF OREGON");
+        yield createInfo('BETTER LUCK NEXT TIME');
+        yield createInfo('SINCERELY');
+        yield createInfo('THE OREGON CITY CHAMBER OF COMMERCE');
         return;
       }
-      // 1800
-    } else {
-      // ***FINAL TURN***
-      F9 = (2040 - M2) / (M - M2);
-      F = F + (1 - F9) * (8 + 5 * E);
-      // *BELLS IN LINES 4015, 4020*
-      yield createInfo('YOU FINALLY ARRIVED AT OREGON CITY');
-      yield createInfo('AFTER 2040 LONG MILES---HOORAY!!!!!"');
-      F9 = Math.floor(F9 * 14);
-      D3 = D3 * 14 + F9;
-      F9 = F9 + 1;
-      if (F9 >= 8) {
+      case 4000: {
+        F9 = (2040 - M2) / (M - M2);
+        F = F + (1 - F9) * (8 + 5 * E);
+        // *BELLS IN LINES 4015, 4020*
+        yield createInfo('YOU FINALLY ARRIVED AT OREGON CITY');
+        yield createInfo('AFTER 2040 LONG MILES---HOORAY!!!!!"');
+        F9 = Math.floor(F9 * 14);
+        D3 = D3 * 14 + F9;
+        F9 = F9 + 1;
+        if (F9 < 8) {
+          instructionPointer = 4055;
+          break;
+        }
         F9 = F9 - 7;
       }
-      let date;
-      if (F9 === 1) {
-        date = 'MONDAY ';
-      } else if (F9 === 2) {
-        date = 'TUESDAY ';
-      } else if (F9 === 3) {
-        date = 'WEDNESDAY ';
-      } else if (F9 === 4) {
-        date = 'THURSDAY ';
-      } else if (F9 === 5) {
-        date = 'FRIDAY ';
-      } else if (F9 === 6) {
-        date = 'SATURDAY ';
-      } else if (F9 === 7) {
-        date = 'SUNDAY ';
+      case 4055: {
+        instructionPointer = [4060, 4070, 4080, 4090, 4100, 4110, 4120][F9 - 1];
+        break;
       }
-
-      if (D3 <= 124) {
+      case 4060: {
+        info = 'MONDAY ';
+        instructionPointer = 4125;
+        break;
+      }
+      case 4070: {
+        info = 'TUESDAY ';
+        instructionPointer = 4125;
+        break;
+      }
+      case 4080: {
+        info = 'WEDNESDAY ';
+        instructionPointer = 4125;
+        break;
+      }
+      case 4090: {
+        info = 'THURSDAY ';
+        instructionPointer = 4125;
+        break;
+      }
+      case 4100: {
+        info = 'FRIDAY ';
+        instructionPointer = 4125;
+        break;
+      }
+      case 4110: {
+        info = 'SATURDAY ';
+        instructionPointer = 4125;
+        break;
+      }
+      case 4120: {
+        info = 'SUNDAY ';
+        instructionPointer = 4125;
+        break;
+      }
+      case 4125: {
+        if (D3 > 124) {
+          instructionPointer = 4145;
+          break;
+        }
         D3 = D3 - 93;
-        yield createInfo(`JULY ${date} 1847`);
-      } else if (D3 <= 155) {
-        yield createInfo(`AUGUST ${date} 1847`);
-      } else if (D3 <= 185) {
-        yield createInfo(`SEPTEMBER ${date} 1847`);
-      } else if (D3 <= 216) {
-        yield createInfo(`OCTOBER ${date} 1847`);
-      } else {
-        D3 = D3 - 216;
-        yield createInfo(`NOVEMBER ${date} 1847`);
+        yield createInfo(`JULY ${info} 1847`);
+        instructionPointer = 4215;
+        break;
       }
-
-      yield createInfo('FOOD, BULLETS, CLOTHING, MISC. SUPP., CASH');
-      if (B <= 0) {
+      case 4145: {
+        if (D3 > 155) {
+          instructionPointer = 4165;
+          break;
+        }
+        D3 = D3 - 124;
+        yield createInfo(`AUGUST ${info} 1847`);
+        instructionPointer = 4215;
+        break;
+      }
+      case 4165: {
+        if (D3 > 185) {
+          instructionPointer = 4185;
+          break;
+        }
+        D3 = D3 - 155;
+        yield createInfo(`SEPTEMBER ${info} 1847`);
+        instructionPointer = 4215;
+        break;
+      }
+      case 4185: {
+        if (D3 > 216) {
+          instructionPointer = 4205;
+          break;
+        }
+        D3 = D3 - 185;
+        yield createInfo(`OCTOBER ${info} 1847`);
+        instructionPointer = 4215;
+        break;
+      }
+      case 4205: {
+        D3 = D3 - 216;
+        yield createInfo(`NOVEMBER ${info} 1847`);
+      }
+      case 4215: {
+        yield createInfo('FOOD, BULLETS, CLOTHING, MISC. SUPP., CASH');
+        if (B > 0) {
+          instructionPointer = 4240;
+          break;
+        }
         B = 0;
       }
-      if (C <= 0) {
+      case 4240: {
+        if (C > 0) {
+          instructionPointer = 4250;
+          break;
+        }
         C = 0;
       }
-      if (M1 <= 0) {
+      case 4250: {
+        if (M1 > 0) {
+          instructionPointer = 4260;
+          break;
+        }
         M1 = 0;
       }
-      if (T <= 0) {
+      case 4260: {
+        if (T > 0) {
+          instructionPointer = 4270;
+          break;
+        }
         T = 0;
       }
-      if (F <= 0) {
+      case 4270: {
+        if (F > 0) {
+          instructionPointer = 4285;
+          break;
+        }
         F = 0;
       }
-      yield createInfo(
-        `${Match.floor(F)}, ${Math.floor(B)}, ${Math.floor(C)}, ${Math.floor(
-          M1
-        )}, ${Mathf.floor(T)}`
-      );
-      yield createInfo('PRESIDENT JAMES K. POLK SENDS YOU HIS');
-      yield createInfo('      HEARTIEST CONGRATULATIONS');
-      yield createInfo('AND WISHES YOU A PROSPEROUS LIFE AHEAD');
-      yield createInfo('AT YOUR NEW HOME');
+      case 4285: {
+        yield createInfo(
+          `${Match.floor(F)}, ${Math.floor(B)}, ${Math.floor(C)}, ${Math.floor(
+            M1
+          )}, ${Mathf.floor(T)}`
+        );
+        yield createInfo('PRESIDENT JAMES K. POLK SENDS YOU HIS');
+        yield createInfo('      HEARTIEST CONGRATULATIONS');
+        yield createInfo('AND WISHES YOU A PROSPEROUS LIFE AHEAD');
+        yield createInfo('AT YOUR NEW HOME');
+        return;
+      }
+      case 4500: {
+        // ***SHOOTING SUB-ROUTINE***
+        const startTime = new Date();
+        const C$ = yield createStringChoice('TYPE BANG');
+        const endTime = new Date();
+        B2 = 7;
+        if (C$.toUpperCase() === 'BANG') {
+          B1 = Math.min((startTime - endTime) / 1000, B2);
+          instructionPointer = 4535;
+          break;
+        }
+        B1 = 7;
+      }
+      case 4535: {
+        instructionPointer = returnPointer;
+        break;
+      }
+      case 4700: {
+        // ***ILLNESS SUB-ROUTINE***
+        if (100 * Math.random() < 10 + 35 * (E - 1)) {
+          instructionPointer = 4740;
+          break;
+        }
+        if (100 * Math.random() < 100 - 40 / Math.pow(4, E - 1)) {
+          instructionPointer = 4760;
+          break;
+        }
+        yield createInfo('SERIOUS ILLNESS---');
+        yield createInfo('YOU MUST STOP FOR MEDICAL ATTENTION');
+        M = M1 - 10;
+        S4 = 1;
+        instructionPointer = 4780;
+        break;
+      }
+      case 4740: {
+        yield createInfo('MILD ILLNESS---MEDICINE USED');
+        M = M - 5;
+        M1 = M1 - 2;
+        instructionPointer = 4780;
+        break;
+      }
+      case 4760: {
+        yield createInfo('BAD ILLNESS---MEDICINE USED');
+        M = M - 5;
+        M1 = M1 - 5;
+      }
+      case 4780: {
+        if (M1 < 0) {
+          instructionPointer = 3550;
+          break;
+        }
+        if (L1 === 1) {
+          instructionPointer = 3215;
+          break;
+        }
+        instructionPointer = 3100;
+        break;
+      }
+      default: {
+        // ***IDENDIFICATION OF VARIABLES IN THE PROGRAM***
+        // A = AMOUNT SPENT ON ANIMALS
+        // B = AMOUNT SPENT ON AMMUNITION
+        // B1 = ACTUAL RESPONSE TIME FOR INPUTING 'BANG'
+        // B2 = MAXIMUM RESPONSE TIME FOR INPUTING 'BANG'
+        // C = AMOUNT SPENT ON CLOTHING
+        // C1 = FLAG FOR INSUFFICIENT CLOTHING IN COLD WEATHER
+        // C$ = YES/NO RESPONSE TO QUESTIONS
+        // D1 = COUNTER IN GENERATING EVENTS
+        // D3 = TURN NUMBER FOR SETTING DATE
+        // D4 = CURRENT DATE
+        // E = CHOICE OF EATING
+        // F = AMOUNT SPENT ON FOOD
+        // F1 = FLAG FOR CLEARING SOUTH PASS
+        // F2 = FLAG FOR CLEARING BLUE MOUNTAINS
+        // F9 = FRACTION OF 2 WEEKS TRAVELED ON FINAL TURN
+        // K8 = FLAG FOR INJURY
+        // L1 = FLAG FOR BLIZZARD
+        // M = TOTAL MILEAGE WHOLE TRIP
+        // M1 = AMOUNT SPENT ON MISCELLANEOUS SUPPLIES
+        // M2 = TOTAL MILEAGE UP THROUGH PREVIOUS TURN
+        // M9 = FLAG FOR CLEARING SOUTH PASS IN SETTING MILEAGE
+        // P = AMOUNT SPENT ON ITEMS AT FORT
+        // R1 = RANDOM NUMBER IN CHOOSING EVENTS
+        // S4 = FLAG FOR ILLNESS
+        // S5 = 'HOSTILITY OF RIDERS' FACTOR
+        // T = CASH LEFT OVER AFTER INITIAL PURCHASES
+        // T1 = CHOICE OF TACTICS WHEN ATTACKED
+        // X = CHOICE OF ACTION FOR EACH TURN
+        // X1 = FLAG FOR FORT OPTION
+      }
     }
   }
 }

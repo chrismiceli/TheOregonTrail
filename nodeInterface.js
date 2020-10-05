@@ -1,8 +1,10 @@
-debugger;
-const { play } = require('./oregonTrail');
+/* global require */
+/* eslint-disable no-console */
 const prompt = require('prompt-sync')();
 
-let game = play();
+const { play } = require('./oregonTrail');
+
+const game = play();
 let input;
 while (true) {
   const { done, value: output } = game.next(input);

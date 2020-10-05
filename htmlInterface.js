@@ -1,3 +1,4 @@
+/* global play */
 function createInfo(text) {
   const textElement = document.createElement('div');
   const appElement = document.getElementById('app');
@@ -14,7 +15,7 @@ function createChoice(text, choices) {
     choices.forEach((choice, index) => {
       const choiceButton = document.createElement('button');
       choiceButton.textContent = choice;
-      let eventListener = () => {
+      const eventListener = () => {
         choiceButton.removeEventListener('click', eventListener);
         for (const choiceButtonToRemove of choiceButtons) {
           appElement.removeChild(choiceButtonToRemove);
@@ -47,10 +48,10 @@ function createInput(text, type) {
     }
     const enterButton = document.createElement('button');
     enterButton.textContent = 'ENTER';
-    let eventListener = (event) => {
+    const eventListener = (event) => {
       enterButton.removeEventListener('click', eventListener);
       formElement.removeEventListener('submit', eventListener);
-      const value = numberInput.value;
+      const { value } = numberInput;
       resolve(value);
       formElement.removeChild(numberInput);
       formElement.removeChild(enterButton);

@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["prettier"],
+  "rules": {
+    "one-var": 0,
+    "one-var-declaration-per-line": 0,
+    "no-fallthrough": 0,
+    "no-multi-assign": 0,
+    "no-constant-condition": 0,
+    "no-restricted-syntax": 0,
+    "prettier/prettier": "error"
+  }
+}

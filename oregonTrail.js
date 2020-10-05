@@ -1,3 +1,4 @@
+/* global module */
 /*  MINNESOTA EDUCATIONAL COMPUTING CONSORTIUM STAFF */
 /*  PROGRAMMING REVISIONS BY DON RAWITSCH - 1975     */
 /*  CURRENT VERSION - 3/27/75                        */
@@ -33,32 +34,16 @@ function* play() {
 
   let instructionPointer = 30;
   let returnPointer;
-  let X1;
-  let K8;
-  let S4;
-  let F1;
-  let F2;
-  let M;
-  let M9;
-  let D3;
-  let info;
-  let E;
-  let T1;
+  let X1, K8, S4, F1, F2, M, M9, D3, info, E, T1, X, P, B1, L1, C1, S5, F9, B2;
 
-  let A;
-  let F;
-  let B;
-  let C;
-  let M1;
-  let T;
-  let M2;
-  let D1;
-  let DATA_INDEX;
-  let R1;
+  let A, F, B, C, M1, T, M2, D1, DATA_INDEX, R1;
   while (true) {
     switch (instructionPointer) {
       case 30: {
-        let C$ = yield createChoice('DO YOU NEED INSTRUCTIONS', ['YES', 'NO']);
+        const C$ = yield createChoice('DO YOU NEED INSTRUCTIONS', [
+          'YES',
+          'NO',
+        ]);
         if (C$ === 'NO') {
           instructionPointer = 400;
           break;
@@ -200,7 +185,7 @@ function* play() {
         break;
       }
       case 580: {
-        B = 50 * B;
+        B *= 50;
         yield createInfo(
           `AFTER ALL YOUR PURCHASES, YOU NOW HAVE ${T} DOLLARS LEFT`
         );
@@ -210,8 +195,8 @@ function* play() {
       }
       case 700: {
         // ***SETTING DATE***
-        D3 = D3 + 1;
-        info = `MONDAY `;
+        D3 += 1;
+        info = 'MONDAY ';
         if (D3 > 10) {
           instructionPointer = 735;
           break;
@@ -371,7 +356,7 @@ function* play() {
         break;
       }
       case 1105: {
-        T = T - 20;
+        T -= 20;
         if (T < 0) {
           instructionPointer = 3520;
           break;
@@ -399,7 +384,7 @@ function* play() {
           instructionPointer = 1350;
           break;
         }
-        X1 = X1 * -1;
+        X1 *= -1;
       }
       case 1310: {
         X = parseInt(
@@ -441,7 +426,7 @@ function* play() {
         X = 2;
       }
       case 1370: {
-        X = X + 1;
+        X += 1;
         if (X === 3) {
           instructionPointer = 1395;
           break;
@@ -455,7 +440,7 @@ function* play() {
         break;
       }
       case 1395: {
-        X1 = X1 * -1;
+        X1 *= -1;
       }
       case 1400: {
         instructionPointer = [1500, 1700, 1800][X - 1];
@@ -477,13 +462,13 @@ function* play() {
           instructionPointer = 1550;
           break;
         }
-        T = T - P;
+        T -= P;
         if (T >= 0) {
           instructionPointer = 1550;
           break;
         }
         yield createInfo("YOU DON'T HAVE THAT MUCH--KEEP YOUR SPENDING DOWN");
-        T = T + P;
+        T += P;
         P = 0;
       }
       case 1550: {
@@ -491,7 +476,7 @@ function* play() {
         break;
       }
       case 1555: {
-        F = F + (2 / 3) * P;
+        F += (2 / 3) * P;
         P = parseInt(yield createNumericChoice('AMMUNITION'), 10);
         returnPointer = 1570;
         instructionPointer = 1520;
@@ -505,15 +490,15 @@ function* play() {
         break;
       }
       case 1585: {
-        C = C + (2 / 3) * P;
+        C += (2 / 3) * P;
         P = parseInt(yield createNumericChoice('MISCELLANEOUS SUPPLIES'), 10);
         returnPointer = 1600;
         instructionPointer = 1520;
         break;
       }
       case 1600: {
-        M1 = M1 + (2 / 3) * P;
-        M = M - 45;
+        M1 += (2 / 3) * P;
+        M -= 45;
         instructionPointer = 1800;
         break;
       }
@@ -528,7 +513,7 @@ function* play() {
         break;
       }
       case 1715: {
-        M = M - 45;
+        M -= 45;
         returnPointer = 1725;
         instructionPointer = 4500;
         break;
@@ -607,7 +592,7 @@ function* play() {
         // ***RIDERS ATTACK***
         if (
           Math.random() * 10 >
-          (Math.pow(M / 100 - 4, 2) + 72) / (Math.pow(M / 100 - 4, 2) + 12) - 1
+          ((M / 100 - 4) ** 2 + 72) / ((M / 100 - 4) ** 2 + 12) - 1
         ) {
           instructionPointer = 2500;
           break;
@@ -628,7 +613,7 @@ function* play() {
         yield createInfo('TACTICS');
       }
       case 2140: {
-        let T1 = parseInt(
+        T1 = parseInt(
           yield createChoice(
             `(1) RUN  (2) ATTACK  (3) CONTINUE  (4) CIRCLE WAGONS
 IF YOU RUN YOU'LL GAIN TIME BUT WEAR DOWN YOUR OXEN
@@ -654,10 +639,10 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           instructionPointer = 2220;
           break;
         }
-        M = M + 20;
-        M1 = M1 - 15;
-        B = B - 150;
-        A = A - 40;
+        M += 20;
+        M1 -= 15;
+        B -= 150;
+        A -= 40;
         instructionPointer = 2395;
         break;
       }
@@ -684,7 +669,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 2250: {
         if (B1 <= 4) {
-          instructionPointer == 2275;
+          instructionPointer = 2275;
           break;
         }
         yield createInfo('LOUSY SHOT---YOU GOT KNIFED');
@@ -707,8 +692,8 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           instructionPointer = 2390;
           break;
         }
-        B = B - 150;
-        M1 = M1 - 15;
+        B -= 150;
+        M1 -= 15;
         instructionPointer = 2395;
         break;
       }
@@ -719,7 +704,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 2315: {
         B = B - B1 * 30 - 80;
-        M = M - 25;
+        M -= 25;
         instructionPointer = 2235;
         break;
       }
@@ -728,8 +713,8 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           instructionPointer = 2350;
           break;
         }
-        M = M + 15;
-        A = A - 10;
+        M += 15;
+        A -= 10;
         instructionPointer = 2395;
         break;
       }
@@ -738,8 +723,8 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           instructionPointer = 2370;
           break;
         }
-        M = M - 5;
-        B = B - 100;
+        M -= 5;
+        B -= 100;
         instructionPointer = 2395;
         break;
       }
@@ -752,7 +737,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         break;
       }
       case 2380: {
-        M = M - 20;
+        M -= 20;
         instructionPointer = 2395;
         break;
       }
@@ -788,7 +773,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         R1 = 100 * Math.random();
       }
       case 2515: {
-        D1 = D1 + 1;
+        D1 += 1;
         if (D1 === 16) {
           instructionPointer = 3020;
           break;
@@ -841,14 +826,14 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       case 2550: {
         yield createInfo('WAGON BREAKS DOWN--LOSE TIME AND SUPPLIES FIXING IT');
         M = M - 15 - 5 * Math.random();
-        M1 = M1 - 8;
+        M1 -= 8;
         instructionPointer = 3100;
         break;
       }
       case 2570: {
         yield createInfo('OX INJURES LEG---SLOWS YOU DOWN REST OF TRIP');
-        M = M - 25;
-        A = A - 20;
+        M -= 25;
+        A -= 20;
         instructionPointer = 3100;
         break;
       }
@@ -862,7 +847,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 2615: {
         yield createInfo('OX WANDERS OFF---SPEND TIME LOOKING FOR IT');
-        M = M - 17;
+        M -= 17;
         instructionPointer = 3100;
         break;
       }
@@ -870,7 +855,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         yield createInfo(
           'YOUR SON GETS LOST---SPEND HALF THE DAY LOOKING FOR HIM'
         );
-        M = M - 10;
+        M -= 10;
         instructionPointer = 3100;
         break;
       }
@@ -886,9 +871,9 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           break;
         }
         yield createInfo('HEAVY RAINS---TIME AND SUPPLIES LOST');
-        F = F - 10;
-        B = B - 500;
-        M1 = M1 - 15;
+        F -= 10;
+        B -= 500;
+        M1 -= 15;
         M = M - 10 * Math.random() - 5;
         instructionPointer = 3100;
         break;
@@ -900,13 +885,13 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         break;
       }
       case 2705: {
-        B = B - 20 * B1;
+        B -= 20 * B1;
         if (B >= 0) {
           instructionPointer = 2735;
           break;
         }
         yield createInfo('YOU RAN OUT OF BULLETS---THEY GET LOTS OF CASH');
-        T = T / 3;
+        T /= 3;
         instructionPointer = 2740;
         break;
       }
@@ -922,8 +907,8 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         );
         K8 = 1;
         yield createInfo('BETTER HAVE A DOC LOOK AT YOUR WOUND');
-        M1 = M1 - 5;
-        A = A - 20;
+        M1 -= 5;
+        A -= 20;
         instructionPointer = 3100;
         break;
       }
@@ -937,10 +922,10 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         yield createInfo(
           'THERE WAS A FIRE IN YOUR WAGON--FOOD AND SUPPLIES DAMAGED'
         );
-        F = F - 40;
-        B = B - 400;
+        F -= 40;
+        B -= 400;
         M1 = M1 - Math.random() * 8 - 3;
-        M = M - 15;
+        M -= 15;
         instructionPointer = 3100;
         break;
       }
@@ -952,8 +937,8 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 2825: {
         yield createInfo('YOU KILLED A POISONOUS SNAKE AFTER IT BIT YOU');
-        B = B - 10;
-        M1 = M1 - 5;
+        B -= 10;
+        M1 -= 5;
         if (M1 >= 0) {
           instructionPointer = 2855;
           break;
@@ -970,8 +955,8 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         yield createInfo(
           'WAGON GETS SWAMPED FORDING RIVER--LOSE FOOD AND CLOTHES'
         );
-        F = F - 30;
-        C = C - 20;
+        F -= 30;
+        C -= 20;
         M = M - 20 - 20 * Math.random();
         instructionPointer = 3100;
         break;
@@ -1008,9 +993,9 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         );
       }
       case 2915: {
-        B = B - 20 * B1;
-        C = C - B1 * 4;
-        F = F - B1 * 8;
+        B -= 20 * B1;
+        C -= B1 * 4;
+        F -= B1 * 8;
         instructionPointer = 3100;
         break;
       }
@@ -1025,7 +1010,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 2955: {
         info = `${info}HAVE ENOUGH CLOTHING TO KEEP YOU WARM`;
-        if ((C1 = 0)) {
+        if (C1 === 0) {
           instructionPointer = 3100;
           break;
         }
@@ -1035,7 +1020,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       case 2970: {
         yield createInfo('HAIL STORM---SUPPLIES DAMAGED');
         M = M - 5 - Math.random() * 10;
-        B = B - 200;
+        B -= 200;
         M1 = M1 - 4 - Math.random() * 3;
         instructionPointer = 3100;
         break;
@@ -1066,7 +1051,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 3020: {
         yield createInfo('HELPFUL INDIANS SHOW YOU WHERE TO FIND MORE FOOD');
-        F = F + 14;
+        F += 14;
         instructionPointer = 3100;
         break;
       }
@@ -1078,8 +1063,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         }
         if (
           Math.random() * 10 >
-          9 -
-            (Math.pow(M / 100 - 15, 2) + 72) / (Math.pow(M / 100 - 15, 2) + 12)
+          9 - ((M / 100 - 15) ** 2 + 72) / ((M / 100 - 15) ** 2 + 12)
         ) {
           instructionPointer = 3175;
           break;
@@ -1092,7 +1076,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         yield createInfo(
           'YOU GOT LOST---LOSE VALUABLE TIME TRYING TO FIND TRAIL!'
         );
-        M = M - 60;
+        M -= 60;
         instructionPointer = 3175;
         break;
       }
@@ -1102,8 +1086,8 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           break;
         }
         yield createInfo('WAGON DAMAGED!---LOSE TIME AND SUPPLIES');
-        M1 = M1 - 5;
-        B = B - 200;
+        M1 -= 5;
+        B -= 200;
         M = M - 20 - 30 * Math.random();
         instructionPointer = 3175;
         break;
@@ -1151,9 +1135,9 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       case 3300: {
         yield createInfo('BLIZZARD IN MOUNTAIN PASS--TIME AND SUPPLIES LOST');
         L1 = 1;
-        F = F - 25;
-        M1 = M1 - 10;
-        B = B - 300;
+        F -= 25;
+        M1 -= 10;
+        B -= 300;
         M = M - 30 - 40 * Math.random();
         if (C < 18 + 2 * Math.random()) {
           instructionPointer = 4700;
@@ -1217,18 +1201,18 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 4000: {
         F9 = (2040 - M2) / (M - M2);
-        F = F + (1 - F9) * (8 + 5 * E);
+        F += (1 - F9) * (8 + 5 * E);
         // *BELLS IN LINES 4015, 4020*
         yield createInfo('YOU FINALLY ARRIVED AT OREGON CITY');
         yield createInfo('AFTER 2040 LONG MILES---HOORAY!!!!!"');
         F9 = Math.floor(F9 * 14);
         D3 = D3 * 14 + F9;
-        F9 = F9 + 1;
+        F9 += 1;
         if (F9 < 8) {
           instructionPointer = 4055;
           break;
         }
-        F9 = F9 - 7;
+        F9 -= 7;
       }
       case 4055: {
         instructionPointer = [4060, 4070, 4080, 4090, 4100, 4110, 4120][F9 - 1];
@@ -1274,7 +1258,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           instructionPointer = 4145;
           break;
         }
-        D3 = D3 - 93;
+        D3 -= 93;
         yield createInfo(`JULY ${info} 1847`);
         instructionPointer = 4215;
         break;
@@ -1284,7 +1268,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           instructionPointer = 4165;
           break;
         }
-        D3 = D3 - 124;
+        D3 -= 124;
         yield createInfo(`AUGUST ${info} 1847`);
         instructionPointer = 4215;
         break;
@@ -1294,7 +1278,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           instructionPointer = 4185;
           break;
         }
-        D3 = D3 - 155;
+        D3 -= 155;
         yield createInfo(`SEPTEMBER ${info} 1847`);
         instructionPointer = 4215;
         break;
@@ -1304,13 +1288,13 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           instructionPointer = 4205;
           break;
         }
-        D3 = D3 - 185;
+        D3 -= 185;
         yield createInfo(`OCTOBER ${info} 1847`);
         instructionPointer = 4215;
         break;
       }
       case 4205: {
-        D3 = D3 - 216;
+        D3 -= 216;
         yield createInfo(`NOVEMBER ${info} 1847`);
       }
       case 4215: {
@@ -1351,9 +1335,9 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 4285: {
         yield createInfo(
-          `${Match.floor(F)}, ${Math.floor(B)}, ${Math.floor(C)}, ${Math.floor(
+          `${Math.floor(F)}, ${Math.floor(B)}, ${Math.floor(C)}, ${Math.floor(
             M1
-          )}, ${Mathf.floor(T)}`
+          )}, ${Math.floor(T)}`
         );
         yield createInfo('PRESIDENT JAMES K. POLK SENDS YOU HIS');
         yield createInfo('      HEARTIEST CONGRATULATIONS');
@@ -1384,7 +1368,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           instructionPointer = 4740;
           break;
         }
-        if (100 * Math.random() < 100 - 40 / Math.pow(4, E - 1)) {
+        if (100 * Math.random() < 100 - 40 / 4 ** (E - 1)) {
           instructionPointer = 4760;
           break;
         }
@@ -1397,15 +1381,15 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 4740: {
         yield createInfo('MILD ILLNESS---MEDICINE USED');
-        M = M - 5;
-        M1 = M1 - 2;
+        M -= 5;
+        M1 -= 2;
         instructionPointer = 4780;
         break;
       }
       case 4760: {
         yield createInfo('BAD ILLNESS---MEDICINE USED');
-        M = M - 5;
-        M1 = M1 - 5;
+        M -= 5;
+        M1 -= 5;
       }
       case 4780: {
         if (M1 < 0) {
@@ -1463,6 +1447,7 @@ play.PROMPT_TYPE = {
 };
 
 if (typeof module === 'undefined') {
+  // eslint-disable-next-line no-global-assign
   module = {};
 }
 

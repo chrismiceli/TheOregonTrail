@@ -194,6 +194,10 @@ function* play() {
         break;
       }
       case 700: {
+        if (M >= 2040 || D3 > 17) {
+          instructionPointer = 4000;
+          break;
+        }
         // ***SETTING DATE***
         D3 += 1;
         info = 'MONDAY ';
@@ -1352,7 +1356,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         const endTime = new Date();
         B2 = 7;
         if (C$.toUpperCase() === 'BANG') {
-          B1 = Math.min((startTime - endTime) / 1000, B2);
+          B1 = Math.min((endTime - startTime) / 1000, B2);
           instructionPointer = 4535;
           break;
         }
@@ -1434,6 +1438,8 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
         // T1 = CHOICE OF TACTICS WHEN ATTACKED
         // X = CHOICE OF ACTION FOR EACH TURN
         // X1 = FLAG FOR FORT OPTION
+        console.error('Unexpected condition encountered.');
+        return;
       }
     }
   }

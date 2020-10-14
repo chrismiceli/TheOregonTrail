@@ -572,7 +572,7 @@ function* play() {
           yield createChoice(
             'DO YOU WANT TO EAT (1) POORLY  (2) MODERATELY OR (3) WELL',
             [
-              { id: '1', label: 'POORTLY' },
+              { id: '1', label: 'POORLY' },
               { id: '2', label: 'MODERATELY' },
               { id: '3', label: 'WELL' },
             ]

@@ -9,25 +9,25 @@ function createInfo(text) {
 
 function createChoice(text, choices) {
   const appElement = document.getElementById('app');
+  const containerElement = document.createElement('div');
   createInfo(text);
+  appElement.appendChild(containerElement);
   const promise = new Promise((resolve) => {
     const choiceButtons = [];
-    choices.forEach((choice, index) => {
+    choices.forEach(({ id, label }, index) => {
       const choiceButton = document.createElement('button');
-      choiceButton.textContent = choice;
+      choiceButton.textContent = label;
       const eventListener = () => {
         choiceButton.removeEventListener('click', eventListener);
-        for (const choiceButtonToRemove of choiceButtons) {
-          appElement.removeChild(choiceButtonToRemove);
-        }
+        appElement.removeChild(containerElement);
         const choiceValueElement = document.createElement('div');
-        choiceValueElement.textContent = choice;
+        choiceValueElement.textContent = label;
         appElement.appendChild(choiceValueElement);
-        resolve(choice);
+        resolve(id);
       };
       choiceButton.addEventListener('click', eventListener);
       choiceButtons.push(choiceButton);
-      appElement.appendChild(choiceButton);
+      containerElement.appendChild(choiceButton);
       if (index === 0) {
         choiceButton.focus();
       }
@@ -97,7 +97,12 @@ function getInputs(input) {
       }
     }
     promise.then(getInputs);
-    document.getElementById('bottom').scrollIntoView();
+    window.scrollTo({
+      behavior: 'smooth',
+      left: 0,
+      top: document.body.getBoundingClientRect().height,
+    });
+    document.getElementById('bottom').scrollTo({ behavior: 'smooth' });
   }
 }
 getInputs();

@@ -41,8 +41,8 @@ function* play() {
     switch (instructionPointer) {
       case 30: {
         const C$ = yield createChoice('DO YOU NEED INSTRUCTIONS', [
-          'YES',
-          'NO',
+          { id: 'YES', label: 'YES' },
+          { id: 'NO', label: 'NO' },
         ]);
         if (C$ === 'NO') {
           instructionPointer = 400;
@@ -394,7 +394,11 @@ function* play() {
         X = parseInt(
           yield createChoice(
             'DO YOU WANT TO (1) STOP AT THE NEXT FORT, (2) HUNT, OR (3) CONTINUE',
-            ['1', '2', '3']
+            [
+              { id: '1', label: 'STOP AT THE NEXT FORT' },
+              { id: '2', label: 'HUNT' },
+              { id: '3', label: 'CONTINUE' },
+            ]
           ),
           10
         );
@@ -418,8 +422,8 @@ function* play() {
       case 1350: {
         X = parseInt(
           yield createChoice('DO YOU WANT TO (1) HUNT, OR (2) CONTINUE', [
-            '1',
-            '2',
+            { id: '1', label: 'HUNT' },
+            { id: '2', label: 'CONTINUE' },
           ]),
           10
         );
@@ -567,7 +571,11 @@ function* play() {
         E = parseInt(
           yield createChoice(
             'DO YOU WANT TO EAT (1) POORLY  (2) MODERATELY OR (3) WELL',
-            ['1', '2', '3']
+            [
+              { id: '1', label: 'POORTLY' },
+              { id: '2', label: 'MODERATELY' },
+              { id: '3', label: 'WELL' },
+            ]
           ),
           10
         );
@@ -622,7 +630,12 @@ function* play() {
             `(1) RUN  (2) ATTACK  (3) CONTINUE  (4) CIRCLE WAGONS
 IF YOU RUN YOU'LL GAIN TIME BUT WEAR DOWN YOUR OXEN
 IF YOU CIRCLE YOU'LL LOSE TIME`,
-            ['1', '2', '3', '4']
+            [
+              { id: '1', label: 'RUN' },
+              { id: '2', label: 'ATTACK' },
+              { id: '3', label: 'CONTINUE' },
+              { id: '4', label: 'CIRCLE WAGONS' },
+            ]
           ),
           10
         );
@@ -1181,11 +1194,20 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       case 3600: {
         yield createInfo('DO TO YOUR UNFORTUNATE SITUATION, THERE ARE A FEW');
         yield createInfo('FORMALITIES WE MUST GO THROUGH');
-        yield createChoice('WOULD YOU LIKE A MINISTER?', ['YES', 'NO']);
-        yield createChoice('WOULD YOU LIKE A FANCY FUNERAL?', ['YES', 'NO']);
+        yield createChoice('WOULD YOU LIKE A MINISTER?', [
+          { id: 'YES', label: 'YES' },
+          { id: 'NO', label: 'NO' },
+        ]);
+        yield createChoice('WOULD YOU LIKE A FANCY FUNERAL?', [
+          { id: 'YES', label: 'YES' },
+          { id: 'NO', label: 'NO' },
+        ]);
         const C$ = yield createChoice(
           'WOULD YOU LIKE US TO INFORM YOUR NEXT OF KIN?',
-          ['YES', 'NO']
+          [
+            { id: 'YES', label: 'YES' },
+            { id: 'NO', label: 'NO' },
+          ]
         );
         if (C$.toUpperCase() === 'YES') {
           instructionPointer = 3670;

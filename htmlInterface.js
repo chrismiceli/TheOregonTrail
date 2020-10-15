@@ -102,7 +102,6 @@ function getInputs(input) {
       left: 0,
       top: document.body.getBoundingClientRect().height,
     });
-    document.getElementById('bottom').scrollTo({ behavior: 'smooth' });
   }
 }
 getInputs();

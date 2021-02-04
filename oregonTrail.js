@@ -593,7 +593,7 @@ function* play() {
           instructionPointer = 2000;
           break;
         }
-        F = F + 8 + 5 + E;
+        F = F + 8 + 5 * E;
         yield createInfo("YOU CAN'T EAT THAT WELL");
         instructionPointer = 1900;
         break;

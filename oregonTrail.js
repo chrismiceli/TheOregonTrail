@@ -205,9 +205,9 @@ function* play() {
           instructionPointer = 735;
           break;
         }
-        instructionPointer = [740, 750, 760, 770, 780, 790, 800, 810, 820, 830][
-          D3 - 1
-        ];
+        instructionPointer = [
+          740, 750, 760, 770, 780, 790, 800, 810, 820, 830,
+        ][D3 - 1];
         break;
       }
       case 735: {
@@ -796,21 +796,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           break;
         }
         const DATA = [
-          6,
-          11,
-          13,
-          15,
-          17,
-          22,
-          32,
-          35,
-          37,
-          42,
-          44,
-          54,
-          64,
-          69,
-          95,
+          6, 11, 13, 15, 17, 22, 32, 35, 37, 42, 44, 54, 64, 69, 95,
         ];
         const D = DATA[DATA_INDEX];
         DATA_INDEX += 1;
@@ -823,16 +809,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           break;
         }
         instructionPointer = [
-          2550,
-          2570,
-          2590,
-          2615,
-          2630,
-          2645,
-          2660,
-          2690,
-          2785,
-          2810,
+          2550, 2570, 2590, 2615, 2630, 2645, 2660, 2690, 2785, 2810,
         ][D1 - 1];
         break;
       }

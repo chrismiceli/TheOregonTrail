@@ -1,4 +1,5 @@
 /* global module */
+/* eslint-disable no-fallthrough */
 /*  MINNESOTA EDUCATIONAL COMPUTING CONSORTIUM STAFF */
 /*  PROGRAMMING REVISIONS BY DON RAWITSCH - 1975     */
 /*  CURRENT VERSION - 3/27/75                        */
@@ -83,7 +84,7 @@ function* play() {
     IN THE WORD 'BANG' AND HIT THE 'RETURN' KEY, THE BETTER
     LUCK YOU'LL HAVE WITH YOUR GUN.
             WHEN ASKED TO ENTER MONEY AMOUNTS, DON'T USE A '$'.
-            GOOD LUCK!!!`
+            GOOD LUCK!!!`,
         );
       }
       case 400: {
@@ -93,9 +94,9 @@ function* play() {
       case 415: {
         A = parseInt(
           yield createNumericChoice(
-            'HOW MUCH DO YOU WANT TO SPEND ON YOUR OXEN TEAM'
+            'HOW MUCH DO YOU WANT TO SPEND ON YOUR OXEN TEAM',
           ),
-          10
+          10,
         );
         if (A >= 200) {
           instructionPointer = 440;
@@ -117,7 +118,7 @@ function* play() {
       case 455: {
         F = parseInt(
           yield createNumericChoice('HOW MUCH DO YOU WANT TO SPEND ON FOOD'),
-          10
+          10,
         );
         if (F >= 0) {
           instructionPointer = 485;
@@ -130,9 +131,9 @@ function* play() {
       case 485: {
         B = parseInt(
           yield createNumericChoice(
-            'HOW MUCH DO YOU WANT TO SPEND ON AMMUNITION'
+            'HOW MUCH DO YOU WANT TO SPEND ON AMMUNITION',
           ),
-          10
+          10,
         );
         if (B >= 0) {
           instructionPointer = 510;
@@ -145,9 +146,9 @@ function* play() {
       case 510: {
         C = parseInt(
           yield createNumericChoice(
-            'HOW MUCH DO YOU WANT TO SPEND ON CLOTHING'
+            'HOW MUCH DO YOU WANT TO SPEND ON CLOTHING',
           ),
-          10
+          10,
         );
         if (C >= 0) {
           instructionPointer = 535;
@@ -160,9 +161,9 @@ function* play() {
       case 535: {
         M1 = parseInt(
           yield createNumericChoice(
-            'HOW MUCH DO YOU WANT TO SPEND ON MISCELANEOUS SUPPLIES'
+            'HOW MUCH DO YOU WANT TO SPEND ON MISCELANEOUS SUPPLIES',
           ),
-          10
+          10,
         );
         if (M1 >= 0) {
           instructionPointer = 560;
@@ -179,7 +180,7 @@ function* play() {
           break;
         }
         yield createInfo(
-          'YOU OVERSPENT--YOU ONLY HAD $700 TO SPEND.  BUY AGAIN'
+          'YOU OVERSPENT--YOU ONLY HAD $700 TO SPEND.  BUY AGAIN',
         );
         instructionPointer = 415;
         break;
@@ -187,7 +188,7 @@ function* play() {
       case 580: {
         B *= 50;
         yield createInfo(
-          `AFTER ALL YOUR PURCHASES, YOU NOW HAVE ${T} DOLLARS LEFT`
+          `AFTER ALL YOUR PURCHASES, YOU NOW HAVE ${T} DOLLARS LEFT`,
         );
         yield createInfo('MONDAY MARCH 29 1847');
         instructionPointer = 1000;
@@ -205,9 +206,9 @@ function* play() {
           instructionPointer = 735;
           break;
         }
-        instructionPointer = [
-          740, 750, 760, 770, 780, 790, 800, 810, 820, 830,
-        ][D3 - 1];
+        instructionPointer = [740, 750, 760, 770, 780, 790, 800, 810, 820, 830][
+          D3 - 1
+        ];
         break;
       }
       case 735: {
@@ -337,7 +338,7 @@ function* play() {
           break;
         }
         yield createInfo(
-          "YOU'D BETTER DO SOME HUNTING OR BUY FOOD AND SOON!!!!"
+          "YOU'D BETTER DO SOME HUNTING OR BUY FOOD AND SOON!!!!",
         );
       }
       case 1055: {
@@ -398,9 +399,9 @@ function* play() {
               { id: '1', label: 'STOP AT THE NEXT FORT' },
               { id: '2', label: 'HUNT' },
               { id: '3', label: 'CONTINUE' },
-            ]
+            ],
           ),
-          10
+          10,
         );
         if (X > 2) {
           instructionPointer = 1340;
@@ -425,7 +426,7 @@ function* play() {
             { id: '1', label: 'HUNT' },
             { id: '2', label: 'CONTINUE' },
           ]),
-          10
+          10,
         );
         if (X === 1) {
           instructionPointer = 1370;
@@ -575,9 +576,9 @@ function* play() {
               { id: '1', label: 'POORLY' },
               { id: '2', label: 'MODERATELY' },
               { id: '3', label: 'WELL' },
-            ]
+            ],
           ),
-          10
+          10,
         );
         if (E > 3) {
           instructionPointer = 1900;
@@ -620,7 +621,6 @@ function* play() {
       }
       case 2130: {
         info = `${info}LOOK HOSTILE`;
-        info = '';
         yield createInfo(info);
         yield createInfo('TACTICS');
       }
@@ -635,9 +635,9 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
               { id: '2', label: 'ATTACK' },
               { id: '3', label: 'CONTINUE' },
               { id: '4', label: 'CIRCLE WAGONS' },
-            ]
+            ],
           ),
-          10
+          10,
         );
         if (T1 < 1) {
           instructionPointer = 2140;
@@ -779,7 +779,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           break;
         }
         yield createInfo(
-          'YOU RAN OUT OF BULLETS AND GOT MASSACRED BY THE RIDERS'
+          'YOU RAN OUT OF BULLETS AND GOT MASSACRED BY THE RIDERS',
         );
         instructionPointer = 3600;
         break;
@@ -847,7 +847,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 2630: {
         yield createInfo(
-          'YOUR SON GETS LOST---SPEND HALF THE DAY LOOKING FOR HIM'
+          'YOUR SON GETS LOST---SPEND HALF THE DAY LOOKING FOR HIM',
         );
         M -= 10;
         instructionPointer = 3100;
@@ -897,7 +897,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 2740: {
         yield createInfo(
-          'YOU GOT SHOT IN THE LEG AND THEY TOOK ONE OF YOUR OXEN'
+          'YOU GOT SHOT IN THE LEG AND THEY TOOK ONE OF YOUR OXEN',
         );
         K8 = 1;
         yield createInfo('BETTER HAVE A DOC LOOK AT YOUR WOUND');
@@ -914,7 +914,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 2785: {
         yield createInfo(
-          'THERE WAS A FIRE IN YOUR WAGON--FOOD AND SUPPLIES DAMAGED'
+          'THERE WAS A FIRE IN YOUR WAGON--FOOD AND SUPPLIES DAMAGED',
         );
         F -= 40;
         B -= 400;
@@ -947,7 +947,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 2860: {
         yield createInfo(
-          'WAGON GETS SWAMPED FORDING RIVER--LOSE FOOD AND CLOTHES'
+          'WAGON GETS SWAMPED FORDING RIVER--LOSE FOOD AND CLOTHES',
         );
         F -= 30;
         C -= 20;
@@ -983,7 +983,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 2910: {
         yield createInfo(
-          'SLOW ON THE DRAW---THEY GOT AT YOUR FOOD AND CLOTHES'
+          'SLOW ON THE DRAW---THEY GOT AT YOUR FOOD AND CLOTHES',
         );
       }
       case 2915: {
@@ -1068,7 +1068,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           break;
         }
         yield createInfo(
-          'YOU GOT LOST---LOSE VALUABLE TIME TRYING TO FIND TRAIL!'
+          'YOU GOT LOST---LOSE VALUABLE TIME TRYING TO FIND TRAIL!',
         );
         M -= 60;
         instructionPointer = 3175;
@@ -1184,7 +1184,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           [
             { id: 'YES', label: 'YES' },
             { id: 'NO', label: 'NO' },
-          ]
+          ],
         );
         if (C$.toUpperCase() === 'YES') {
           instructionPointer = 3670;
@@ -1194,7 +1194,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       }
       case 3670: {
         yield createInfo(
-          'WE THANK YOU FOR THIS INFORMATION AND WE ARE SORRY YOU'
+          'WE THANK YOU FOR THIS INFORMATION AND WE ARE SORRY YOU',
         );
         yield createInfo("DIDN'T MAKE IT TO THE GREAT TERRITORY OF OREGON");
         yield createInfo('BETTER LUCK NEXT TIME');
@@ -1339,8 +1339,8 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
       case 4285: {
         yield createInfo(
           `${Math.floor(F)}, ${Math.floor(B)}, ${Math.floor(C)}, ${Math.floor(
-            M1
-          )}, ${Math.floor(T)}`
+            M1,
+          )}, ${Math.floor(T)}`,
         );
         yield createInfo('PRESIDENT JAMES K. POLK SENDS YOU HIS');
         yield createInfo('      HEARTIEST CONGRATULATIONS');

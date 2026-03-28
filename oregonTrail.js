@@ -301,7 +301,7 @@ function* play() {
         break;
       }
       case 910: {
-        yield createInfo(`${info} 1847`);
+        yield createInfo(`${info}1847`);
       }
       case 1000: {
         // ***BEGINNING EACH TURN***
@@ -1262,7 +1262,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           break;
         }
         D3 -= 93;
-        yield createInfo(`JULY ${info} 1847`);
+        yield createInfo(`${info}JULY ${D3} 1847`);
         instructionPointer = 4215;
         break;
       }
@@ -1272,7 +1272,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           break;
         }
         D3 -= 124;
-        yield createInfo(`AUGUST ${info} 1847`);
+        yield createInfo(`${info}AUGUST ${D3} 1847`);
         instructionPointer = 4215;
         break;
       }
@@ -1282,7 +1282,7 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           break;
         }
         D3 -= 155;
-        yield createInfo(`SEPTEMBER ${info} 1847`);
+        yield createInfo(`${info}SEPTEMBER ${D3} 1847`);
         instructionPointer = 4215;
         break;
       }
@@ -1292,13 +1292,13 @@ IF YOU CIRCLE YOU'LL LOSE TIME`,
           break;
         }
         D3 -= 185;
-        yield createInfo(`OCTOBER ${info} 1847`);
+        yield createInfo(`${info}OCTOBER ${D3} 1847`);
         instructionPointer = 4215;
         break;
       }
       case 4205: {
         D3 -= 216;
-        yield createInfo(`NOVEMBER ${info} 1847`);
+        yield createInfo(`${info}NOVEMBER ${D3} 1847`);
       }
       case 4215: {
         yield createInfo('FOOD, BULLETS, CLOTHING, MISC. SUPP., CASH');

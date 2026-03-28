@@ -52,7 +52,7 @@ function createInput(text, type) {
       enterButton.removeEventListener('click', eventListener);
       formElement.removeEventListener('submit', eventListener);
       const { value } = numberInput;
-      resolve(value);
+      resolve(value || 0);
       formElement.removeChild(numberInput);
       formElement.removeChild(enterButton);
       const numberValueElement = document.createElement('div');
